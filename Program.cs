@@ -169,7 +169,7 @@ namespace CSharp
         int GetCommon();
         int Target { get; set; }
     }
-    interface ICommonImplements1 : ICommon { }
+    interface ICommonImplement : ICommon { }
 
     struct MyData : ICommon
     {
@@ -281,7 +281,7 @@ namespace CSharp
         //}
     }
 
-    class ABC : ICommonImplements1
+    class ABC : ICommonImplement
     {
         int j;
         private int k;
@@ -523,6 +523,22 @@ namespace CSharp
 
         public static void PrintIndexAndValues(IEnumerable myList)
         {
+            //When you write :
+            //foreach (Foo bar in baz) {}
+            //it's functionally equivalent to writing:
+            //IEnumerator bat = baz.GetEnumerator();
+            //while (bat.MoveNext())
+            //{
+            //    bar = (Foo)bat.Current
+            //    ...
+            //}
+            //By "functionally equivalent," I mean that's actually what the compiler turns the code into. 
+            //You can't use foreach on baz in this example unless baz implements IEnumerable. IEnumerable 
+            //means that baz implements the method
+            //IEnumerator GetEnumerator()
+            //The IEnumerator object that this method returns must implement the methods
+            //bool MoveNext(), void Reset() and object Current()
+
             int i = 0;
             System.Collections.IEnumerator myEnumerator = myList.GetEnumerator();
             while (myEnumerator.MoveNext())
