@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="HTMLPage1.htm" />
+    <Content Include="t.js" />
     <Content Include="TextFile1.txt" />
   </ItemGroup>
   <ItemGroup>

@@ -836,6 +836,28 @@ namespace CSharp
             cc.PickUpLate();
             Console.ReadKey();
 
+
+            //var vs dynamic
+            /*
+             * 1. var is a statically typed and results in a strongly typed when inferred at compile time 
+             * / dynamic are dynamically typed and the type is inferred at run-time.
+             * 2. var: to be initialized at declaration / dynamic: need not.
+             * 3. var: the variable type cannot be changed after it is assigned / dynamic: can
+             * 4. var: Intellisense help is available / dynamic: not
+             * 5. 
+             */
+
+            //var _vInit; //Implicitly - typed variables must be initialized
+
+            var _vSolar = "testing system";
+            //_vSolar = 999; //Cannot implicitly convert type 'int' to 'string'
+
+            int varLength = _vSolar.Length;
+
+            dynamic _dSolar = "easterm road";
+            _dSolar = 999;
+
+
             //SQL POINT - If you rename a procedure in "Object Explorer" at 
             //"Databases-<db_name>-Programmability-Stored Procedures-<sp_name>",
             //it is renamed within the procedure script also. 
