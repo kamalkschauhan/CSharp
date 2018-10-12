@@ -1010,7 +1010,9 @@ namespace CSharp
             Console.WriteLine(obj[4].GetI.ToString());
             Console.WriteLine();
 
-            string queryString = "select * from [Sales].[ShoppingCartItem]";
+            string queryString = "select * from [Sales].[ShoppingCartItem]"
+                + " select* from [Person].[PhoneNumberType]"
+                + " select* from [HumanResources].[Shift]";
 
             //SqlConnection connection = new SqlConnection("Data Source=10.220.141.147\\TPSQLEXPRESS;Initial Catalog=EntLibQuickStarts;User ID=sa;Password=1234;");
             SqlConnection connection = new SqlConnection("Data Source=DPCD-4VWWLV1;Initial Catalog=AdventureWorks2016;Integrated Security=SSPI;Persist Security Info=False;");
@@ -1023,14 +1025,19 @@ namespace CSharp
                 SqlDataReader reader = command.ExecuteReader();
 
                 // Call Read before accessing data.
+                Console.WriteLine("AdventureWorks2016 DB");
+                Console.WriteLine();
                 do
                 {
                     while (reader.Read())
+                    {
                         Console.WriteLine(String.Format("{0}, {1}, {2}", reader[0], reader[1], reader[2]));
+                    }
+                    Console.WriteLine();
                 } while (reader.NextResult());
                 // Call Close when done reading.
                 reader.Close();
-
+                Console.WriteLine();
                 int g = 1;
                 int h = 0;
                 g = g / h;
