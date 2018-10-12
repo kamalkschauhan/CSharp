@@ -475,7 +475,10 @@ namespace CSharp
         }
     }
 
-    //System.Core.dll required for implementing Extension methods
+    //System.Core.dll required for implementing Extension methods. 
+    //it needs to be added in the reference 
+    //all helper methods in MVC and the Linq operations are extension methods.
+
     public static class MyExtensions
     {
         public static int WordCount(this String str)
@@ -695,6 +698,28 @@ namespace CSharp
             PrintProductDetails(cherryPastry);
         }
 
+        public delegate void MathOperations(int x, int y);
+
+        public static void Add(int x, int y)
+        {
+            Console.WriteLine("Executed by Delegate:{0,4:N0}", x + y);
+        }
+
+        public static void Subtract(int x, int y)
+        {
+            Console.WriteLine("Executed by Delegate:{0,2:N0}", x - y);
+        }
+
+        public static void Multiply(int x, int y)
+        {
+            Console.WriteLine("Executed by Delegate:{0,2:N0}", x * y);
+        }
+
+        public static void Divide(int x, int y)
+        {
+            Console.WriteLine("Executed by Delegate:{0,3:N0}", x / y);
+        }
+
         [STAThread]
         public static void Main()
         {
@@ -715,10 +740,10 @@ namespace CSharp
 
             Derived objDerived = new Derived();
             Console.WriteLine("");
-            UseParams(4,88);
+            UseParams(4, 88);
             Console.WriteLine("");
             ABC o = new ABC();
-            
+
             //factory with dependency injection
             OCP objOCP = new OCP(new TextLogger());
             objOCP.LogErrors();
@@ -732,9 +757,10 @@ namespace CSharp
 
             Console.WriteLine("\"quick\".Split(new char[] {}).Length : " + strDecr.Split(default(string[]), StringSplitOptions.None).Length);
             Console.WriteLine("\"quick\".Split(new char[] {}).Length : " + strDecr.Split(new char[] { }).Length);
-            Console.WriteLine("\"quick\".Select(x => x.ToString()).ToArray().Length : " + strDecr.Select(x => x.ToString()).ToArray().Length);
+            //to be demystified.....as it was working in earlier framework
+            //Console.WriteLine("\"quick\".Select(x => x.ToString()).ToArray().Length : " + strDecr.Select(x => x.ToString()).ToArray().Length);
             Console.WriteLine("Regex.Split(\"quick\", string.Empty).Length : " + Regex.Split(strDecr, string.Empty).Length);
-            
+
             Console.WriteLine("");
             Console.WriteLine("CaesarEncrypt(\"quick\", -3) : " + CaesarEncrypt(strDecr, -3));
             Console.WriteLine("CaesarEncrypt(\"nrfzh\", 3) : " + CaesarEncrypt(CaesarEncrypt(strDecr, -3), 3));
@@ -768,7 +794,7 @@ namespace CSharp
             numbers.Add(3, "three");
             numbers.Add(4, "four");
             numbers.Add(5, "five");
-            
+
             Console.WriteLine("Hello Extension Methods : " + "Hello Extension Methods".WordCount().ToString());
             Console.WriteLine("");
             Console.WriteLine("Hashtable : ");
@@ -847,6 +873,13 @@ namespace CSharp
              * 5. 
              */
 
+            //Accessing code behind variable/property in javascript.
+            //That variable doesn't exist in JavaScript because it is running on a different machine than 
+            //the C# code. C# is running on the server and JavaScript is running on the client's browser.
+
+            //Have your page write the property out either to a dynamically generated javascript var or to 
+            //an HTML hidden field.
+
             //var _vInit; //Implicitly - typed variables must be initialized
 
             var _vSolar = "testing system";
@@ -878,7 +911,7 @@ namespace CSharp
             new Thread(new ThreadStart(Thread2)).Start();
             // Wait for Thread2 to signal that it has a result by setting
             // finished to true.
-            for (; ; )
+            for (;;)
             {
                 if (finished)
                 {
@@ -977,10 +1010,10 @@ namespace CSharp
             Console.WriteLine(obj[4].GetI.ToString());
             Console.WriteLine();
 
-            string queryString = "select * from agency";
+            string queryString = "select * from [Sales].[ShoppingCartItem]";
 
             //SqlConnection connection = new SqlConnection("Data Source=10.220.141.147\\TPSQLEXPRESS;Initial Catalog=EntLibQuickStarts;User ID=sa;Password=1234;");
-            SqlConnection connection = new SqlConnection("Integrated Security=SSPI;Persist Security Info=False;Data Source=TT_CPU_008;Initial Catalog=B2B2B_TEST;");
+            SqlConnection connection = new SqlConnection("Data Source=DPCD-4VWWLV1;Initial Catalog=AdventureWorks2016;Integrated Security=SSPI;Persist Security Info=False;");
 
             SqlCommand command = new SqlCommand(queryString, connection);
 
@@ -1047,12 +1080,44 @@ namespace CSharp
             //    //asdasd
             //    txScope.Complete();
             //}
+            // Print delegate points to PrintNumber
+            MathOperations delMathOperation = null;
+
+            delMathOperation = Add;
+            delMathOperation.Invoke(10, 2);
+            delMathOperation = Subtract;
+            delMathOperation.Invoke(10, 2);
+            delMathOperation = Multiply;
+            delMathOperation.Invoke(10, 2);
+            delMathOperation = Divide;
+            delMathOperation.Invoke(10, 2);
+
+            //printDel(100000);
+            //printDel(200);
+
+            //// Print delegate points to PrintMoney
+            //printDel = PrintMoney;
+
+            //printDel(10000);
+            //printDel(200);
 
             int iCount = 0;
-            foreach (string name in Directory.GetFileSystemEntries("\\windows\\system32\\config"))
+            string[] entries = null;
+            try
             {
-                if (name.Contains(".evt") || name.Contains(".Evt"))
-                    iCount++;
+                entries = Directory.GetFileSystemEntries("\\windows\\system32\\config");
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            if (entries != null)
+            {
+                foreach (string name in entries)
+                {
+                    if (name.Contains(".evt") || name.Contains(".Evt"))
+                        iCount++;
+                }
             }
             Console.WriteLine("No of Event Log files found = " + iCount.ToString());
 
