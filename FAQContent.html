@@ -1,0 +1,1571 @@
+﻿<html>
+<head>
+    <style>
+        /* Style the tab */
+
+        .accordionContainer {
+            background-color: #f1f1f1;
+            padding-bottom: 1px;
+            margin-bottom: 5px;
+            padding-top: 5px;
+            margin-top: 5px;
+            cursor: pointer;
+        }
+
+        .tab {
+            overflow: hidden;
+        }
+
+            /* Style the spans inside the tab */
+            .tab div {
+                background-color: #ddd;
+                float: left;
+                border: none;
+                outline: none;
+                cursor: pointer;
+                padding: 5px 10px;
+                transition: 0.3s;
+                font-size: 15px;
+                border-radius: 4px;
+                margin: 5px;
+            }
+
+                /* Change background color of spans on hover */
+                .tab div:hover, div.active {
+                    background-color: #910A2D;
+                    color: #FFF;
+                }
+
+        .open_accord:after {
+            content: url("showhideminus.png");
+        }
+
+        .close_accord:after {
+            content: url("showhideplus.png");
+        }
+
+        .plusminuslocation {
+            margin: 8px;
+            float: right;
+        }
+
+        #search {
+            height: 30px;
+            width: 80%;
+            background-size: 16px 16px;
+            background-position: right;
+            margin-top: 30px;
+            background-color: white;
+            float: right;
+        }
+
+            #search::-ms-clear {
+                display: none;
+            }
+
+        .searchbackground {
+            background: url(search.png) no-repeat scroll;
+        }
+
+        .clearsearchbackground {
+            background: url(clearsearch.png) no-repeat scroll;
+        }
+
+        .clearsearchdiv {
+            /*background-color: white;*/
+            opacity: 0.4;
+            background-color: mediumaquamarine;
+            height: 25px;
+            margin-top: 16px;
+            cursor: pointer;
+            width: 29px;
+            position: absolute;
+        }
+
+        /* Style the tab */
+        .tabbed {
+            width: 100%;
+            overflow: hidden;
+            background-color: #f1f1f1;
+            position: relative;
+        }
+
+            .tabbed span {
+                width: 15%;
+                background-color: white;
+                text-align: center;
+                float: left;
+                border: none;
+                outline: none;
+                padding-bottom: 20px;
+                padding-left: 16px;
+                padding-right: 16px;
+                padding-top: 16px;
+                margin-left: 16px;
+                margin-right: 16px;
+                margin-top: 16px;
+                border-top: thin;
+                border-right: thin;
+                border-left: thin;
+                border-bottom: none !important;
+                border: 1px solid #ccc;
+                transition: 0.3s;
+                font-size: 17px;
+            }
+
+        #container {
+            margin: 0 auto;
+            width: 300px;
+            position: relative;
+            outline: 2px solid #060;
+        }
+
+            #container #click {
+                width: 40px;
+                line-height: 30px;
+                opacity: 0.4;
+                background-color: #090;
+                color: white;
+                text-align: center;
+                position: absolute;
+                right: 0;
+                top: 0;
+            }
+
+            #container input[type="text"] {
+                width: 100%;
+                height: 30px;
+                padding-right: 40px;
+            }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" />
+    <script type="text/javascript">
+        //var siteTheme = '<%=SiteTheme%>';
+        //if (siteTheme == "Toyota")
+        //    lblSite.innerHTML = "Toyota Finance Online";
+        //else
+        //    lblSite.innerHTML = "Lexus Financial Services Online";
+
+        $(document).ready(function () {
+            //HIDE THE DIVS ON PAGE LOAD
+            $("div.accordionContent").hide();
+            var sectionName = window.location.hash;
+            if (sectionName) {
+                $(sectionName).show();
+                var x = parseInt($(sectionName).offset().left);
+                var y = parseInt($(sectionName).offset().top);
+                window.scrollTo(x, y);
+            }
+
+            //ACCORDION CONTAINER ACTION
+            $("div.accordionContainer").click(function () {
+                $("div.accordionContent").slideUp("fast");
+                $("div.accordionContainer span").removeClass();
+                $("div.accordionContainer span").addClass("plusminuslocation close_accord");
+
+                if (!$(this).next().is(":visible")) {
+                    $(this).next().slideDown("normal");
+                    $(this).find("span")[0].className = "plusminuslocation open_accord";
+                }
+            });
+
+            $("#top > div").hide();
+            $(".topTenFaqs").show();
+            $(".tablinks")[0].className += " active";
+
+            jQuery.expr[':'].contains = function (a, i, m) {
+                return jQuery(a).text().toLowerCase()
+                    .indexOf(m[3].toLowerCase()) >= 0;
+            };
+
+            $.extend({
+                getUrlVars: function () {
+                    var vars = [], hash;
+                    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+                    for (var i = 0; i < hashes.length; i++) {
+                        hash = hashes[i].split('=');
+                        vars.push(hash[0]);
+                        vars[hash[0]] = hash[1];
+                    }
+                    return vars;
+                },
+                getUrlVar: function (name) {
+                    return $.getUrlVars()[name];
+                }
+            });
+
+            //// Get object of URL parameters
+            //var allVars = $.getUrlVars();
+
+            // Getting URL var by its name
+            //var byName = $.getUrlVar("q");
+            //console.log(decodeURIComponent(byName));
+            var qs = decodeURI($.getUrlVar("q")).trim();
+
+            if (qs != "undefined" && qs != "") {
+                $("#search")[0].value = qs;
+                $("#search").focus();
+
+                searchFAQ(qs);
+                if ($(".accordionContainer:visible").length > 0) {
+                    //convert raw HTML elment to jquery element to run jquery function on it
+                    $($(".accordionContainer:visible + div")[0]).slideDown();
+                    //$(".accordionContainer:visible + div").first().slideDown();
+                    //$(".accordionContainer:visible + div").eq(0).slideDown();
+                    $(".accordionContainer:visible").find("span")[0].className = "plusminuslocation open_accord";
+                }
+            }
+
+            $("#search").keyup(function (e) {
+                var s = $(this).val().trim();
+
+                if (s === "") {
+                    setDefaultFilter();
+                }
+                else {
+                    searchFAQ(s);
+                }
+                return true;
+            });
+
+            $("#hiddendiv").click(function () {
+                $("#search")[0].value = "";
+                setDefaultFilter();
+            });
+
+            $(window).resize(function () {
+                $(".clearsearchdiv")[0].style.marginLeft = $("body").prop("clientWidth") - 30;
+            });
+        });
+
+        function setDefaultFilter() {
+            clearTabSelection();
+            $(".accordionContainer").show();
+            $("#search")[0].className = "searchbackground";
+            $("#hiddendiv")[0].style.display = "none";
+
+            $("#top > div").hide();
+            $(".topTenFaqs").show();
+            $(".tablinks")[0].className += " active";
+            $(".h4dynamic h4")[0].innerText = $(".tablinks.active")[0].innerText;
+        }
+
+        function searchFAQ(seachKey) {
+            seachKey = seachKey.trim().toLowerCase();
+            clearTabSelection();
+            $("#search")[0].className = "clearsearchbackground";
+            $("#hiddendiv")[0].style.display = "block";
+
+            $(".accordionContainer:not(:contains(" + seachKey + "))").hide();
+            $(".accordionContainer:contains(" + seachKey + ")").show();
+            $(".clearsearchdiv")[0].style.marginLeft = $("body").prop("clientWidth") - 30;
+        }
+
+        function hideshowQuestions(groupName, evt) {
+            if (evt.currentTarget.className.indexOf("active") > -1) {
+                clearTabSelection();
+                return;
+            }
+            else {
+                clearTabSelection();
+                evt.currentTarget.className += " active";
+            }
+
+            $(".h4dynamic h4")[0].innerText = $(".tablinks.active")[0].innerText;
+            $("#top > div").hide();
+
+            switch (groupName) {
+                case "topTenFaqs":
+                    $(".topTenFaqs").show();
+                    break;
+                case "mazdaAssurd":
+                    $(".mazdaAssurd").show();
+                    break;
+                case "newCustomer":
+                    $(".newCustomer").show();
+                    break;
+                case "paymentOut":
+                    $(".paymentOut").show();
+                    break;
+                case "existingCust":
+                    $(".existingCust").show();
+                    break;
+                case "mazdaFinOnline":
+                    $(".mazdaFinOnline").show();
+                    break;
+            }
+        }
+
+        function clearTabSelection() {
+            $("#top > div").show();
+
+            $(".h4dynamic h4")[0].innerText = "";
+
+            var i, tablinks;
+            tablinks = $(".tablinks");
+
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="tabbed">
+        <span>Browse Topic</span>
+        <p>
+            <input id="search" value="" class="searchbackground" /> <div id="hiddendiv" class="clearsearchdiv" style="display:none;"></div>
+        </p>
+    </div>
+    <div id="FAQContainer" runat="server">
+        <div class="tab">
+            <div class="tablinks" onclick="hideshowQuestions('topTenFaqs', event)">Top 10 FAQs</div>
+            <div class="tablinks" onclick="hideshowQuestions('mazdaAssurd', event)">Mazda Assured</div>
+            <div class="tablinks" onclick="hideshowQuestions('newCustomer', event)">New Customer</div>
+            <div class="tablinks" onclick="hideshowQuestions('paymentOut', event)">Payments and Paying out</div>
+            <div class="tablinks" onclick="hideshowQuestions('existingCust', event)">How To / Existing Customer Enquiries</div>
+            <div class="tablinks" onclick="hideshowQuestions('mazdaFinOnline', event)">Mazda Finance Online</div>
+        </div>
+        <br />
+        <div class="h4dynamic"><h4>Top 10 FAQs</h4></div>
+        <hr />
+        <div id="top">
+            <div class="topTenFaqs">
+                <div class="accordionContainer">
+                    <h4>What is Mazda Finance Online?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Mazda Finance Online is the easy way to manage your Mazda Finance account.
+                        You can access your finance account online at a time that suits you.<br />
+                    </p>
+                    <ul class="h5">
+                        <li>View account balances</li>
+                        <li>View contract details</li>
+                        <li>Calculate a payout quote</li>
+                        <li>Generate statements</li>
+                        <li>Update your payment or contact details</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="topTenFaqs">
+                <div class="accordionContainer">
+                    <h4>How can I access my Mazda Finance Online account?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        To access your account you will first need to register. Simply go to www.mfonline.com.au
+                        Select the “Not Registered?” link, then enter your details and create your password.  You will require your Customer ID number which you will find in the welcome letter you received at the commencement of your loan or any other letter that we have sent you.
+                    </p>
+                </div>
+            </div>
+            <div class="topTenFaqs">
+                <div class="accordionContainer">
+                    <h4>How do I print a statement online?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        From the Transactions page you will be able to view,
+                        print or save a PDF version of your statement which will include all transactions from the commencement of your contract.
+
+                    </p>
+                </div>
+            </div>
+            <div class="topTenFaqs">
+                <div class="accordionContainer">
+                    <h4>How do I print a Payout quote online?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div id="current_contract_not_displayed" class="accordionContent">
+                    <p>
+                        From the Payout quote page you will be able to calculate a Payout Quote up until your next due date, Select the date you will be making the payment and calculate to generate a PDF payout quote letter.
+                    </p>
+                </div>
+            </div>
+            <div class="topTenFaqs">
+                <div class="accordionContainer">
+                    <h4>How can I make a complaint to Mazda Finance?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Mazda Finance works hard to try to ensure you always get the best service from us.
+                        If there's something about our products or services that you aren't happy with, then let's work together to see if we can resolve it quickly and easily using the following process:
+
+                    </p>
+                    <h3><strong>Step 1. Let us know</strong></h3>
+                    <p class="h4">
+                        Email us at <a href="mailto:complaints@mazdafinance.com.au">complaints@mazdafinance.com.au</a> or call a Customer Solutions Representative on<strong> 138 500</strong> between 8:30am - 7:00pm (EST) Monday to Friday.
+                        All matters are dealt with seriously and are treated in total confidence. We will aim to resolve your complaint to your satisfaction as soon as possible.
+                    </p>
+                    <h3><strong>Step 2. Escalation to our Internal Dispute Resolution team</strong></h3>
+                    <p class="h4">
+                        If we are unable to resolve your complaint within five business days, then the matter will be escalated to our Internal Dispute Resolution (IDR) team.<br />
+
+                        The IDR team will:
+                    </p>
+                    <ul>
+                        <li>
+                            Conduct a more detailed investigation into your complaint
+                        </li>
+                        <li>
+                            Keep you informed of the resolution process
+                        </li>
+                        <li>
+                            Answer any of your questions
+                        </li>
+                        <li>
+                            Aim to resolve the complaint promptly, and consistently
+                        </li>
+                    </ul>
+                    <address class="h5">
+                        The IDR team can be contacted at any time by:<br />
+                        Mail:<br />
+                        IDR Manager<br />
+                        Mazda Finance<br />
+                        PO Box 1354<br />
+                        Macquarie Centre NSW 2113<br />
+
+                        Email: <a href="mailto:complaints@mazdafinance.com.au">complaints@mazdafinance.com.au</a>
+                    </address>
+                    <h3><strong>Step 3. Seek an external review</strong></h3>
+                    <p class="h4">
+                        If you aren't satisfied with the outcome of your complaint after taking Steps 1 and 2, you may lodge a dispute with the Australian Financial Complaints Authority (AFCA).
+                        AFCA is an external independent impartial body that has been set up to resolve financial services disputes. There is no charge for this service.
+                        The Australian Financial Complaints Authority can be contacted by:
+                        Phone:<strong>1800 931 678</strong>
+                    </p>
+                    <address class="h5">
+                        Mail:<strong>: Australian Financial Complaints Authority</strong><br />
+                        GPO Box 3<br />
+                        Melbourne VIC 3001<br />
+                        Email:<a href="mailto:info@afca.org.au"><strong>info@afca.org.au</strong></a><br />
+                        Web:L<a href="mailto:afca.org.au"><strong>afca.org.au</strong></a>
+                    </address>
+                </div>
+            </div>
+            <div class="topTenFaqs">
+                <div class="accordionContainer">
+                    <h4>I am experiencing financial hardship and having difficulties with my payments. What can I do?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Mazda Finance is committed to giving consideration and assistance to customers who are experiencing financial hardship.
+
+                        Financial hardship involves an inability, rather than an unwillingness, to pay and may be attributed to unforeseen factors including loss of employment, family breakdown, illness, injury or even the death of a family member. Hardship can even encompass situations where customers are impacted by natural disasters such as fire or flooding.
+
+                        For individual or small business customers suffering financial hardship, Mazda Finance may be able to assist in a number of ways including deferring payments, capitalisation of arrears, a moratorium or reducing the payments.
+                        In order to assess your eligibility for financial hardship assistance we require you to complete a "hardship application". Once this has been completed and returned to us, one of our representatives will contact you to discuss alternative solutions available.
+
+                        You can request a hardship application by writing to The Hardship Team, Mazda Finance, PO Box 1354 Macquarie Park NSW 2113. Call us direct on 138 500 or email <a href="mailtohardship@mazdafinance.com.au"><strong>hardship@mazdafinance.com.au</strong></a>
+                    </p>
+                </div>
+            </div>
+            <div class="topTenFaqs">
+                <div class="accordionContainer">
+                    <h4>Can I sell my car while it is under finance?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Mazda Finance holds security over all vehicles financed with us. You may negotiate with a purchaser to sell your car, however you are obligated to pay your loan in full upon the sale of your financed vehicle.
+
+                        You can obtain a final payout quote from Mazda Finance Online along with details of how to make the final payment.  We won’t confirm this amount to the purchaser without your authorisation,
+                        so please provide them with your account number and Payout ID, or simply pass them a copy of the Payout letter that you can access at the site.
+                    </p>
+                </div>
+            </div>
+            <div class="topTenFaqs">
+                <div class="accordionContainer">
+                    <h4>Can I defer a payment?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Please contact our National Customer Solutions Centre on 138 500 to discuss payment arrangements.
+                    </p>
+                </div>
+            </div>
+            <div class="topTenFaqs">
+                <div class="accordionContainer">
+                    <h4>What do I do if I want to finalise my contract?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div id="can_statement_mailed" class="accordionContent">
+                    <p>
+                        To ensure a smooth finalisation of your contract, it is important to have an accurate payout figure calculated. If you want to payout the loan in full, log in to Mazda Finance Online and simply calculate a figure from the Payout Quote page and finalise the contract. You can also access your EFT or BPAY details on this page.
+
+                        By navigating to the Payout Quote page you will be able to calculate a figure for any business day up to the next monthly due date and generate a Payout Letter if you need it.
+
+                        It is important to note that the payout quote will assume that any recent payments have been honoured. In the event that a recent payment dishonours, there will be a shortfall and the contract will not be finalised until this amount, along with any dishonour fees, have been paid.
+                    </p>
+                </div>
+            </div>
+            <div class="topTenFaqs">
+                <div class="accordionContainer">
+                    <h4>Can I change my payment amount Online?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        You can update your payment amount via the Payment Details page, provided your payments are not less than the minimum monthly repayment. Edit the amount listed for regular payment amount and select “save changes”. If you wish to change your payment frequency please contact our National Customer Solutions Centre on 138 500 and we will be happy to help you update your payment.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaAssurd">
+                <div class="accordionContainer">
+                    <h4>What is Mazda Assured?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        A new way to buy a Mazda that gives you all the confidence you need.
+                        Mazda Finance will let you know your finance costs at the outset, and guarantee the minimum amount your car will be worth at the end of your finance contract. That way, you'll have the reassurance of knowing what lies ahead.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaAssurd">
+                <div class="accordionContainer">
+                    <h4>How does Mazda Assured work?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        At the time of purchase you choose your car, then choose your deposit, loan term and agree on the number of kilometres you expect the vehicle to have travelled by the end of the term (end odometer). Based on this, Mazda Finance will guarantee the minimum future value of your new Mazda, otherwise known as the Guaranteed Future Value (GFV). When your term is up, you have the flexibility to trade, keep or return your car to Mazda Finance. So as your circumstances change your car can too, thanks to Mazda Assured.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaAssurd">
+                <div class="accordionContainer">
+                    <h4>What vehicle can I select with Mazda Assured?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>Mazda Assured is applicable for all passenger and light commercial Mazda vehicles.</p>
+                </div>
+            </div>
+            <div class="mazdaAssurd">
+                <div class="accordionContainer">
+                    <h4>Where can I get Mazda Assured from?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>You can go to any participating Mazda dealership to buy your new Mazda with Mazda Assured.</p>
+                </div>
+            </div>
+            <div class="mazdaAssurd">
+                <div class="accordionContainer">
+                    <h4>What terms are allowed for Mazda Assured?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>Mazda Assured can be taken out for terms of 12, 24, 36 or 48 months.</p>
+                </div>
+            </div>
+            <div class="mazdaAssurd">
+                <div class="accordionContainer">
+                    <h4>Can I refinance my loan during the term of the contract and retain the Guaranteed Future Value?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        If you refinance your loan you will no longer be able to return your vehicle for the Guaranteed Future Value.
+                        The Guaranteed Future Value is not available on the refinanced contract.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaAssurd">
+                <div class="accordionContainer">
+                    <h4>What’s a Guaranteed Future Value?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        It's the minimum value of your new or approved demonstrator Mazda at the end of your finance contract, as determined by Mazda Finance. If you decide to return your car to Mazda Finance at the end of your term, Mazda Finance will pay you the agreed Guaranteed Future Value (GFV),
+                        which will be put against your final payment.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaAssurd">
+                <div class="accordionContainer">
+                    <h4>Who decides the Guaranteed Future Value, and how is it worked out?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div id="how_update_accountdetails" class="accordionContent">
+                    <p>
+                        Mazda Finance analysts set the Guaranteed Future Value (GFV), based on what they estimate the vehicle will be worth in the future. This is done through sales results of similar vehicles,
+                        new model data and economic factors, with your loan term and agreed End Odometer factored in.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaAssurd">
+                <div class="accordionContainer">
+                    <h4>Does the Guaranteed Future Value (GFV) equal the expected market value?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div id="how_change_frequency" class="accordionContent">
+                    <p>
+                        The Guaranteed Future Value (GFV) is the minimum value that Mazda Finance believes your vehicle will be worth at the end of your contract term. This is subject to the vehicle being returned in a condition that meets Fair Wear and Tear guidelines, and not having travelled more kilometres than agreed. With this in mind,
+                        the Guaranteed Future Value (GFV) may be more or less than the actual value of the vehicle.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaAssurd">
+                <div class="accordionContainer">
+                    <h4>Do I have to keep the car in good condition?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Yes - if you want to take advantage of Mazda Finance's offer to buy the vehicle from you for the Guaranteed Future Value (GFV).
+                        You will be given a Fair Wear and Tear Guide before you enter into your contract.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaAssurd">
+                <div class="accordionContainer">
+                    <h4>If there’s lots of damage can I return it and claim the Guaranteed Future Value (GFV)?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div id="when_change_paymentdetails_processed" class="accordionContent">
+                    <p>
+                        If your vehicle doesn't meet Fair Wear and Tear guidelines, Mazda Finance will give you the opportunity to have the vehicle repaired. Otherwise, Mazda Finance can organise the repairs and deduct the cost from your Guaranteed Future Value (GFV). This adjusted Guaranteed Future Value (GFV) will then be the price that Mazda Finance will offer you if you return the car at the end of your term. Of course, if you keep the vehicle, the condition doesn't matter.
+                        And if you trade it in or sell it privately, the condition will obviously impact your sale price.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaAssurd">
+                <div class="accordionContainer">
+                    <h4>Can I trade my car?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Yes. You can trade your car at any time for a new vehicle, however
+                        you will need to pay the remaining balance of your account and forgo the Guaranteed Future Value (GFV).
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaAssurd">
+                <div class="accordionContainer">
+                    <h4>Can I keep my car?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Yes. You simply pay out your finance contract during or at the end of the term. Mazda Finance may offer you the chance to extend, vary or refinance the final payment.
+                        If you choose this option, the Guaranteed Future Value (GFV) will no longer apply.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaAssurd">
+                <div class="accordionContainer">
+                    <h4>Can I sell my car privately?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Yes. Simply pay out the remaining balance of your account.
+                        If you do this the Guaranteed Future Value (GFV) will no longer apply.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaAssurd">
+                <div class="accordionContainer">
+                    <h4>Can I return my car?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Yes. Providing your vehicle meets the Fair Wear and Tear guidelines and you have not travelled more kilometres
+                        than agreed, Mazda Finance will use your Guaranteed Future Value (GFV) to pay the final payment.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaAssurd">
+                <div class="accordionContainer">
+                    <h4>What if I drive extra kilometres?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div id="can_payout_letter_mailed" class="accordionContent">
+                    <p>
+                        An excess usage adjustment will apply if, at the end of the term, you have travelled more than the agreed End Odometer. This will be deducted from your Guaranteed Future Value
+                        (GFV), which then becomes your adjusted Guaranteed Future Value (GFV).
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaAssurd">
+                <div class="accordionContainer">
+                    <h4>Is this a lease?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div id="how_payout_loan" class="accordionContent">
+                    <p>
+                        No. If you enter into a Mazda Assured Consumer Loan Contract or Mazda Assured Business Vehicle Loan,
+                        you own the vehicle, with Mazda Finance taking a security interest over it.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaAssurd">
+                <div class="accordionContainer">
+                    <h4>Is Mazda Assured more expensive?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Mazda Assured is competitively priced. As the final payment equates to the Guaranteed Future Value (GFV), the interest is higher than that of a loan with a similar amount and term without a balloon final payment. Of course, the deposit and any prepayment of monthly payments will help reduce charges.
+                        We suggest you seek financial advice to ensure this product is right for you.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaAssurd">
+                <div class="accordionContainer">
+                    <h4>If I use my car for business, are repayments tax deductible?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Mazda Finance does not provide business or tax advice.
+                        We suggest you seek independent financial advice.
+                    </p>
+                </div>
+            </div>
+            <div class="newCustomer">
+                <div class="accordionContainer">
+                    <h4>Can I contact Mazda Finance directly for a quote to finance my Mazda?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Mazda Finance works closely with our Mazda Dealer network to provide a personalised service ensuring the best finance product for your needs. The Business Manager at your local participating
+                        dealership is the best person to speak to about financing your next Mazda.
+                    </p>
+                </div>
+            </div>
+            <div class="newCustomer">
+                <div class="accordionContainer">
+                    <h4>Does Mazda Finance offer unsecured personal loans?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Mazda Finance only finances vehicles so we cannot assist you with a personal loan.
+                    </p>
+                </div>
+            </div>
+            <div class="newCustomer">
+                <div class="accordionContainer">
+                    <h4>Will Mazda Finance provide finance for vehicles purchased privately?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Mazda Finance only provides finance for motor vehicles purchased through a licensed motor dealer.
+                    </p>
+                </div>
+            </div>
+            <div class="newCustomer">
+                <div class="accordionContainer">
+                    <h4>What is the current interest rate offered by Mazda Finance?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Mazda offers Individual rates for a fixed term on a range of consumer and commercial products. The rate is determined on a number of
+                        factors including your credit score. Your local Mazda Dealer can assist you with a finance quote.
+                    </p>
+                </div>
+            </div>
+            <div class="newCustomer">
+                <div class="accordionContainer">
+                    <h4>What is Mazda Individual Rate?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Essentially, it’s an interest rate that’s tailored to your financial circumstances. Instead of taking a one-size-fits-all approach, we use your credit score and other relevant criteria to calculate a rate that’s right for you. It doesn’t matter who you are or where in
+                        Australia you live, the same transparent and trusted process applies.
+                    </p>
+                </div>
+            </div>
+            <div class="newCustomer">
+                <div class="accordionContainer">
+                    <h4>How does Mazda Individual Rate work?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Using smart and sophisticated software, our dealers will calculate a rate based on your individual credit score and other criteria determined by us. No matter who you are or where in Australia you live, you can be sure of a
+                        transparent rate that’s tailored to your personal financial circumstances.
+                    </p>
+                </div>
+            </div>
+            <div class="newCustomer">
+                <div class="accordionContainer">
+                    <h4>What is a credit score?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        A credit score is a single number, usually between 300 and 850, that enables financial institutions to get a sense of your
+                        credit history and to work out whether you’re a viable person to lend money to.
+                    </p>
+                </div>
+            </div>
+            <div class="newCustomer">
+                <div class="accordionContainer">
+                    <h4>Do Mazda Finance take security over the vehicle you have financed?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Mazda Finance will register their interest in any vehicle financed by us on the Personal Property Security Register (PPSR). Our interest in the vehicle will remain in place until the loan on that vehicle is paid out completely.
+                        For further information regarding PPSR please visit http://www.ppsr.gov.au.
+                    </p>
+                </div>
+            </div>
+            <div class="newCustomer">
+                <div class="accordionContainer">
+                    <h4>Can I purchase a vehicle that Mazda Finance has registered interest in?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Mazda Finance will hold an interest in any vehicle financed by us until the loan for that vehicle is paid in full and the final payment for that vehicle has cleared. You will need to negotiate with the owner of the vehicle to ensure the loan is paid out in full before the vehicle can be transferred into your name. If you purchase the vehicle and
+                        the vehicle is not paid out in full, Mazda will retain an interest in the vehicle.
+                    </p>
+                </div>
+            </div>
+            <div class="newCustomer">
+                <div class="accordionContainer">
+                    <h4>I want to purchase a vehicle that is under finance with Mazda Finance. Can I take over the finance?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        No, it is not possible to take over the loan on a vehicle that is under a contract with Mazda Finance.
+                    </p>
+                </div>
+            </div>
+            <div class="newCustomer">
+                <div class="accordionContainer">
+                    <h4>What term does Mazda Finance offer for their finance products?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Mazda Finance offers loans ranging from 12 to 72 months in length, subject to Mazda Finance policy and approval, with a variety of flexible payment options. While all loans run on a monthly
+                        billing cycle we offer the flexibility of weekly, fortnightly or monthly payments.
+                    </p>
+                </div>
+            </div>
+            <div class="newCustomer">
+                <div class="accordionContainer">
+                    <h4>Are there any penalties for paying a loan out earlier than the contracted period?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Break fees do apply for finalising your fixed term, fixed rate loan prior to the end of the
+                        contracted term. The amount of the break fee varies based upon the loan type.
+                    </p>
+                </div>
+            </div>
+            <div class="newCustomer">
+                <div class="accordionContainer">
+                    <h4>Why should I borrow from Mazda Finance rather than a bank?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Unlike banks and other financial institutions, we calculate your rate based on your credit score and other personal criteria determined by us.
+                        This means you can always be sure of a rate that’s transparent and tailored to you.
+                    </p>
+                </div>
+            </div>
+            <div class="newCustomer">
+                <div class="accordionContainer">
+                    <h4>If I use my car for business, are repayments tax deductible?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Mazda Finance does not provide business or tax advice. We suggest you seek independent financial advice.
+                    </p>
+                </div>
+            </div>
+            <div class="newCustomer">
+                <div class="accordionContainer">
+                    <h4>What types of Finance are available from Mazda Finance?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Mazda Finance offers a range of financing solutions for both personal and business use vehicles.
+                        Finance can be conveniently arranged at your local participating Mazda dealership.
+                    </p>
+                </div>
+            </div>
+            <div class="paymentOut">
+                <div class="accordionContainer">
+                    <h4>I am experiencing financial hardship due to drought<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p class="h4">
+                        Mazda Finance is committed to giving consideration and assistance to customers who are experiencing financial hardship due to drought.
+                        For individual or small business customers suffering financial hardship as a result of the drought, Mazda Finance may be able to assist in a number of ways including deferring payments, capitalisation of arrears or a moratorium or reducing the payments.
+                        <br />
+                        Please contact us at <a href="mailto:droughthardship@mazdafinance.com.au"><strong>droughthardship@mazdafinance.com.au</strong></a> and we will be in touch to assist you with the hardship assessment.
+                    </p>
+                </div>
+            </div>
+            <div class="paymentOut">
+                <div class="accordionContainer">
+                    <h4>I am experiencing financial hardship and having difficulties with my payments. What can I do?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Mazda Finance is committed to giving consideration and assistance to customers who are experiencing financial hardship.
+
+                        Financial hardship involves an inability, rather than an unwillingness, to pay and may be attributed to unforeseen factors including loss of employment, family breakdown, illness, injury or even the death of a family member. Hardship can even encompass situations where customers are impacted by natural disasters such as fire or flooding.
+
+                        For individual or small business customers suffering financial hardship, Mazda Finance may be able to assist in a number of ways including deferring payments, capitalisation of arrears, a moratorium or reducing the payments.
+
+                        In order to assess your eligibility for financial hardship assistance we require you to complete a "hardship application". Once this has been completed and returned to us, one of our representatives will contact you to discuss alternative solutions available.
+
+                        You can request a hardship application by writing to The Hardship Team, Mazda Finance, PO Box 1354 Macquarie Park NSW 2113. Call us direct on 138 500 or email the Hardship Team.
+                    </p>
+                </div>
+            </div>
+            <div class="paymentOut">
+                <div class="accordionContainer">
+                    <h4>National Debt Helpline<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        If you are experiencing financial hardship, you may wish to contact a financial counsellor for free, independent advice about your situation. The National Debt Helpline website (ndh.org.au) has easy to use, step-by-step guides on how to tackle debts.
+                        You can also call the National Debt Helpline on 1800 007 007 to talk to a financial counsellor.
+                    </p>
+                </div>
+            </div>
+            <div class="paymentOut">
+                <div class="accordionContainer">
+                    <h4>Can I defer my payment?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Please contact our National Customer Solutions Centre on 138 500 to discuss payment arrangements.
+                    </p>
+                </div>
+            </div>
+            <div class="paymentOut">
+                <div class="accordionContainer">
+                    <h4>What do I do if I’m having a difficulty in making my payments?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Simply contact our National Customer
+                        Solutions Centre on 138 500 so that we can assist you with making a payment arrangement.
+                    </p>
+                </div>
+            </div>
+            <div class="paymentOut">
+                <div class="accordionContainer">
+                    <h4>How do I see when all of my regular payments are due?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p class="h4">
+                        You may access your account online to see your payment details. Log in to Mazda Finance Online. Your Billing Schedule can be viewed on the Contract Details page by selecting the Billing Schedule link.
+                        It shows when all payments are due for the life of the loan.
+                    </p>
+                </div>
+            </div>
+            <div class="paymentOut">
+                <div class="accordionContainer">
+                    <h4>How can I change my banking details for payments to Mazda Finance?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        You may access your account online to update your banking details. Simply register at mazdafinanceonline.com.au to access your loan account details online. Alternatively, contact our National Customer Solutions Centre on 138 500 to be sent a direct debit form, complete and sign it and email it
+                        to <a href="mailto:finance@mazdafinance.com.au">finance@mazdafinance.com.au</a>. Please allow two working days to update your account.
+                        <br />
+                        <strong>Please note</strong> - bank accounts for direct debit payments <u>must</u> be in the name of a contract party. Third party bank accounts will not be accepted.
+                    </p>
+                </div>
+            </div>
+            <div class="paymentOut">
+                <div class="accordionContainer">
+                    <h4>What are the payment methods available?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        The most common payment method is direct debit. You can nominate to make your payments weekly, fortnightly or monthly to suit your pay cycle.  There is no charge to make your payments by direct debit.
+
+                        You can elect to make extra payments to pay your loan off sooner, which may save you interest over the term of your loan depending on your type of loan.
+
+                        You can elect to pay your loan by EFT (Electronic Funds Transfer), Post Billpay or BPAY. Please note that a payment method fee will apply for all payments other than direct debit.
+
+                        Using EFT you can set up regular payments or make a one-off transfer from your bank account using internet banking. Simply register Mazda Finance as the payee by using the BSB and Account Number provided to you. The Account Name for EFT is Mazda Finance.
+                    </p>
+                </div>
+            </div>
+            <div class="paymentOut">
+                <div class="accordionContainer">
+                    <h4>Can I make my payments by credit card?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        No. You are not able to use another credit facility to pay your contract. This includes payments by direct debit or BPAY.
+                        You will be required to nominate payments from a savings or cheque account.
+                    </p>
+                </div>
+            </div>
+            <div class="paymentOut">
+                <div class="accordionContainer">
+                    <h4>How can I make a once off payment to my contract?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        You can elect to make extra payments to pay your loan off sooner, which may save you interest over the term of your loan depending on your type of loan.
+                        You can authorise a once off direct debit free of charge by contacting our National Customer Solutions Centre on 138 500.
+                        You can also elect to pay your loan by EFT (Electronic Funds Transfer) or BPAY. Please note that a payment method fee will apply for all payments other than direct debit.
+
+                        Using EFT you can set-up regular payments or make a one off transfer from your bank account using internet banking. Simply register Mazda Finance as the payee by using the BSB and Account Number provided to you. The Account Name for EFT is Mazda Finance.
+
+                        Mazda Finance Online shows details of our EFT and BPAY Details. Alternatively, refer to any recent letter from us where these details are displayed.
+                    </p>
+                </div>
+            </div>
+            <div class="paymentOut">
+                <div class="accordionContainer">
+                    <h4>How can I pay out my loan with Mazda Finance?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        To ensure a smooth finalisation of your contract, it is important to have an accurate payout figure calculated. If you want to payout the loan in full, log in to Mazda Finance Online and simply calculate a figure from the Payout Quote page and finalise the contract. You can also access your EFT or BPAY details on this page.
+
+                        By navigating to the Payout Quote page you will be able to calculate a figure for any business day up to the next monthly due date and generate a Payout Letter if you need it.
+                        You can authorise a once off direct debit free of charge by contacting our National Customer Solutions Centre on 138 500.
+
+                        It is important to note that the payout quote will assume that any recent payments have been honoured. In the event that a recent payment dishonours, there will be a shortfall and the contract will not be finalised until this amount, along with any dishonour fees, have been paid.
+                    </p>
+                </div>
+            </div>
+            <div class="paymentOut">
+                <div class="accordionContainer">
+                    <h4>Can I have a payout letter mailed to me?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        By contacting our National Customer Solutions Centre on 138 500,
+                        you can request that a payout letter be posted to you. The letter will be generated overnight and posted to you the following business day. We can also email or fax this, should you request it. Please note that a fee is payable.
+                    </p>
+                </div>
+            </div>
+            <div class="paymentOut">
+                <div class="accordionContainer">
+                    <h4>Can I sell my car while it is under finance?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Mazda Finance holds security over all vehicles financed with us. You may negotiate with a purchaser to sell your car, however you are obligated to pay your loan in full upon the sale of your financed vehicle.
+
+                        You can obtain a final payout quote from Mazda Finance Online along with details of how to make the final payment.  We won’t confirm this amount to the purchaser without your authorisation, so please provide them with your account number and Payout ID, or simply pass them a copy of the Payout letter that you can access at the site.
+                    </p>
+                </div>
+            </div>
+            <div class="paymentOut">
+                <div class="accordionContainer">
+                    <h4>I am selling my vehicle under finance with Mazda Finance. Can I continue to pay my loan?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        No, you must pay your loan in full upon the sale of the vehicle. Mazda Finance will continue to
+                        hold security over the vehicle until the loan is fully paid out and the final payment has cleared.
+                    </p>
+                </div>
+            </div>
+            <div class="paymentOut">
+                <div class="accordionContainer">
+                    <h4>I’ve been asked to provide someone with a written payout quote. Can I do this?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Yes. You will be able to print or save a PDF version of the payout letter from the Payout Quote page.  If you’re using the app version, simply email the payout letter to yourself or save it to your iBooks.
+
+                        You can request that a payout letter be posted to you by contacting our National Customer Solutions Centre on 138 500. The letter will be generated overnight and posted to you the following business day. Please note that a fee is payable.
+                    </p>
+                </div>
+            </div>
+            <div class="paymentOut">
+                <div class="accordionContainer">
+                    <h4>What happens once I pay my contract out?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Once the contract has been paid in full, you will receive a letter to confirm that the contract is now finalised.
+                        You may wish to provide a copy of this letter to your insurance company, as many insurers will offer a lower premium if the vehicle is no longer under finance.
+                        If you were making your payments by direct debit, this will automatically be cancelled to ensure that no more payments are deducted.
+
+                        If there has been an overpayment you will receive a refund 5 - 7 business days after the contract has been finalised.
+                    </p>
+                </div>
+            </div>
+            <div class="paymentOut">
+                <div class="accordionContainer">
+                    <h4>How do I have my car removed from the Personal Property Security Register (PPSR)?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Once your contract has been paid in full,
+                        the security will automatically be removed from your vehicle after clearance of the final payment.
+                    </p>
+                </div>
+            </div>
+            <div class="paymentOut">
+                <div class="accordionContainer">
+                    <h4>I have paid out my Mazda Finance loan. When will the security be removed?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Mazda Finance will remove its security over the vehicle when the final payment has been allocated to your loan and there is no outstanding balance due and that payment has been cleared by your financial institution. The time required for payment clearance is dependent upon the payment method and may take up to 8 business days. Paying by BPAY through your financial institution to finalise
+                        your loan is the best payment method for timely removal of our security over the vehicle.
+                    </p>
+                </div>
+            </div>
+            <div class="paymentOut">
+                <div class="accordionContainer">
+                    <h4>I have just received a letter to say that my contract is about to mature and a balloon payment is due. What are my options?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        There are several options available for the end of your loan. If you’ve considered upgrading to a new car, you can speak to your local dealer who will be able to show you the new cars available and discuss your finance options.
+                        If you want to payout the loan in full you can simply calculate a figure from the Payout Quote page and finalise the contract.  Set up a one off direct debit, or access your EFT or BPAY details on this page.
+                        Alternatively, you can call our National Customer Solutions Centre on 138 500 who will discuss the options for refinancing your balloon or residual for a further period.
+                        If you have a Mazda Assured account it is important that you advise us of you end of term decision as early as possible.  You may choose to Trade your car, Keep it, or Return it.  Select your preferred option on the Notifications page during the maturity period.
+                    </p>
+                </div>
+            </div>
+            <div class="existingCust">
+                <div class="accordionContainer">
+                    <h4>How can I access my Mazda Finance Online account?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        To access your account you will first need to register. Simply go to<a href="www.mfonline.com.au"> www.mfonline.com.au</a>
+                        Select the “Not Registered?” link, then enter your details and create your password.
+                        You will require your Customer ID number which you will find in the welcome letter you received at the commencement of your loan or any other letter that we have sent you.
+                    </p>
+                </div>
+            </div>
+            <div class="existingCust">
+                <div class="accordionContainer">
+                    <h4>Can I access my account using Smartphone?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Yes, you can.  Mazda Finance Online is optimised for Smartphones and tablets,
+                        so you can see and access all of the same features.  Simply search for<a href="www.mfonline.com.au"> www.mfonline.com.au</a>.
+                    </p>
+                </div>
+            </div>
+            <div class="existingCust">
+                <div class="accordionContainer">
+                    <h4>How can I make a complaint to Mazda Finance?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Mazda Finance works hard to try to ensure you always get the best service from us.
+                        If there's something about our products or services that you aren't happy with, then let's work together to see if we can resolve it quickly and easily using the following process:
+                        <strong>Step 1. Let us know</strong>
+                        Email us at<a href="mailto:complaints@Mazdafinance.com.au"> complaints@Mazdafinance.com.au</a> or call a Customer Solutions Representative on 138 500 between 8:30am - 7:00pm (EST) Monday to Friday.
+                        All matters are dealt with seriously and are treated in total confidence. We will aim to resolve your complaint to your satisfaction as soon as possible.
+                    </p>
+                    <p>
+                        <strong>Step 2. Escalation to our Internal Dispute Resolution team</strong><br />
+                        If we are unable to resolve your complaint within five business days,
+                        then the matter will be escalated to our Internal Dispute Resolution (IDR) team.<br />
+                        The IDR team will:
+                    </p>
+                    <ul>
+                        <li>Conduct a more detailed investigation into your complaint</li>
+                        <li>Keep you informed of the resolution process</li>
+                        <li>Answer any of your questions</li>
+                        <li>Aim to resolve the complaint promptly, and consistently</li>
+                    </ul>
+                    <p>
+                        The IDR team can be contacted at any time by:<br />
+                        Mail:<br />
+                        IDR Manager
+                        Mazda Finance
+                        PO Box 1354
+                        Macquarie Centre NSW 2113
+                        <br />
+                        Email:<a href="mailto:complaints@mazdafinance.com.au">complaints@mazdafinance.com.au</a>
+                        <br />
+                    </p>
+                    <p>
+                        <strong>Step 3. Seek an external review</strong><br />
+                        If you aren't satisfied with the outcome of your complaint after taking Steps 1 and 2, you may lodge a dispute with the Australian Financial Complaints Authority (AFCA). AFCA is an external independent impartial body that has been set up to resolve financial services disputes. There is no charge for this service.
+                        The Australian Financial Complaints Authority can be contacted by:
+                        Phone:	1800 931 678
+                        <br />
+                        <strong>Australian Financial Complaints Authority</strong><br />
+                        GPO Box 3<br />
+                        Mail: Melbourne VIC 3001
+                        Email:<a href="mailto:info@afca.org.au">info@afca.org.au</a>
+                        Web:<a href="afca.org.au">afca.org.au</a>
+                    </p>
+                </div>
+            </div>
+            <div class="existingCust">
+                <div class="accordionContainer">
+                    <h4>I am experiencing financial hardship, how can Mazda Finance assist me?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Mazda Finance is committed to giving consideration and assistance to customers who are experiencing financial hardship.
+
+                        Financial hardship involves an inability, rather than an unwillingness, to pay and may be attributed to unforeseen factors including loss of employment, family breakdown, illness, injury or even the death of a family member. Hardship can even encompass situations where customers are impacted by natural disasters such as fire or flooding.
+
+                        For individual or small business customers suffering financial hardship, Mazda Finance may be able to assist in a number of ways including deferring payments, capitalisation of arrears, a moratorium or reducing the payments.
+
+                        In order to assess your eligibility for financial hardship assistance we require you to complete a "hardship application". Once this has been completed and returned to us, one of our representatives will contact you to discuss alternative solutions available.
+
+                        You can request a hardship application by writing to The Hardship Team, Mazda Finance, PO Box 1354, Macquarie Park NSW 2113. Call us direct on 138 500 or email<a href="Hardship@mazdafinance.com.au"> Hardship@mazdafinance.com.au</a>
+                    </p>
+                </div>
+            </div>
+            <div class="existingCust">
+                <div class="accordionContainer">
+                    <h4>How do I change my Marketing preference?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        You can update your Marketing Preference via the Personal Details page.
+                    </p>
+                </div>
+            </div>
+            <div class="existingCust">
+                <div class="accordionContainer">
+                    <h4>How do I change my Correspondence Method?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        You can update your Correspondence Method via the Personal Details page. Choosing to receive your correspondence by email means that you can receive
+                        and store notices and other documents electronically and more quickly than if we post them to you.
+                    </p>
+                </div>
+            </div>
+            <div class="existingCust">
+                <div class="accordionContainer">
+                    <h4>How can I authorise a third party to have access to my Mazda Finance account?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        You may authorise a person, over 18 years of age, to obtain information about your loan account. Contact our National Customer Solutions
+                        Centre on 138 500 to be sent a Third Party Authority form, complete and sign it and email it to <a href="mailto:finance@mazdafinance.com.au">finance@mazdafinance.com.au</a>. Please allow two working days to update your account. Please note that this authority will enable
+                        a third party access to information only. They cannot make changes to your payments or direct debit.
+                    </p>
+                </div>
+            </div>
+            <div class="existingCust">
+                <div class="accordionContainer">
+                    <h4>What do I do if I have changed my name?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        You can advise us of a change of name by sending a copy of the appropriate documentation (e.g. marriage certificate, name change certificate) to our National Customer Solutions Centre by
+                        <strong>Email:</strong> <a href="mailto:finance@mazdafinance.com.au">finance@mazdafinance.com.au</a>
+                    </p>
+                </div>
+            </div>
+            <div class="existingCust">
+                <div class="accordionContainer">
+                    <h4>What do I do if my vehicle registration details have changed?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        You can advise us of the updated
+                        vehicle details by contacting our National Customer Solutions Centre on 138 500
+                    </p>
+                </div>
+            </div>
+            <div class="existingCust">
+                <div class="accordionContainer">
+                    <h4>Can I have a payout letter mailed to me?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        By contacting our National Customer Solutions Centre on 138 500, you can request that a payout letter be posted to you. The letter will be generated overnight and posted to you the following business day.
+                        We can also email should you request it. Please note that a fee is payable.
+                    </p>
+                </div>
+            </div>
+            <div class="existingCust">
+                <div class="accordionContainer">
+                    <h4>Can I have a statement mailed to me?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        You can request that a statement be posted to you by contacting our National Customer Solutions Centre on 138 500. The statement will be generated overnight and posted to you the following business day.
+                        We can also email should you request it .Please note that a fee is payable.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaFinOnline">
+                <div class="accordionContainer">
+                    <h4>What is Mazda Finance Online?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Mazda Finance Online is the easy way to manage your Mazda Finance account.
+                        You can access your finance account online at a time that suits you.<br />
+                    </p>
+                    <ul class="h5">
+                        <li>View account balances</li>
+                        <li>View contract details</li>
+                        <li>Calculate a payout quote</li>
+                        <li>Generate statements</li>
+                        <li>Update your payment or contact details</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mazdaFinOnline">
+                <div class="accordionContainer">
+                    <h4>How do I register for Mazda Finance Online?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Select the 'Not Registered?' link on the Login page and enter the details requested. You will require your Customer ID number which you will find in the welcome
+                        letter you received at the commencement of your loan or any other letter that we have sent you.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaFinOnline">
+                <div class="accordionContainer">
+                    <h4>Can I access my account using my Smartphone?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Yes, you can.  Mazda Finance Online is optimised for Smartphones and tablets, so you can see and access all of the same features.
+                        Simply search for<a href="mfonline.com.au"></a> mfonline.com.au
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaFinOnline">
+                <div class="accordionContainer">
+                    <h4>How do I print a statement?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        From the Transactions page you will be able to view, print or save a PDF version of your statement which will include all transactions from the commencement of your contract.
+                        <br />
+                        NOTE: If you do not have Adobe Acrobat Reader installed on your computer you will not be able to view the payout Quote
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaFinOnline">
+                <div class="accordionContainer">
+                    <h4>How do I print a Payout quote?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        From the Payout quote page you will be able to calculate a payout Quote up until your next due date, Select the date you will be making the payment and calculate to generate a PDF payout quote letter.
+                        <br />
+                        NOTE: If you do not have Adobe Acrobat Reader installed on your computer you will not be able to view the payout Quote
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaFinOnline">
+                <div class="accordionContainer">
+                    <h4>Why is the Statement of Account or Payout Letter not generating?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Please check your security settings.  If you have pop-up blockers enabled, it may mean that the PDF cannot be generated.  Disabling pop-up blockers will overcome this. If you do not
+                        have Adobe Acrobat Reader installed on your computer you will not be able to view the payout Quote.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaFinOnline">
+                <div class="accordionContainer">
+                    <h4>What do I do if I want to finalise my contract?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        To ensure a smooth finalisation of your contract, it is important to have an accurate payout figure calculated. By navigating to the Payout Quote page you will be able to calculate a figure for any business day up to the next monthly due date.
+
+                        It is important to note that the payout quote will assume that any recent payments have been honoured. In the event that a recent payment dishonours, there will be a shortfall and the contract will not be finalised until this amount, along with any dishonour fees, have been paid.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaFinOnline">
+                <div class="accordionContainer">
+                    <h4>Can I change my payment amount Online?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        You can update your payment amount via the Payment Details page, provided your payments are not less than the minimum monthly repayment. Edit the amount listed for regular payment amount and select “save changes”. If you wish to change your payment frequency please contact our
+                        National Customer Solutions Centre on 138 500 and we will be happy to help you update your payment.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaFinOnline">
+                <div class="accordionContainer">
+                    <h4>Can I view my personal and business contacts online?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        If you are a company director or guarantor,
+                        you will have access to both your personal and company contact details.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaFinOnline">
+                <div class="accordionContainer">
+                    <h4>Can I change my address and contact details online?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        You can update your address and contact details via the Personal Details page.
+                        Please ensure that your residential address is the address where the vehicle is primarily garaged. You may nominate a different mailing address if required.
+                        While you there please also update your preferred Correspondence Method, so that we can send any notifications to you quickly.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaFinOnline">
+                <div class="accordionContainer">
+                    <h4>Can I make changes to my payment details Online?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Yes. There are several options available to assist you in managing your payments. Update or enter a new bank account or change your payment method to EFT, BPAY or POST Billpay.  Remember if you have more than one contract to update any changes on each one by selecting the contract in the drop down menu.  If you require any other
+                        changes please contact our National Customer Solutions Centre on 138 500 and we will be happy to assist.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaFinOnline">
+                <div class="accordionContainer">
+                    <h4>Can I view my payments and interest charges online?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Yes. All payments, interest charges and other transactions can be viewed from the Transactions page.
+                        You can enter a date range to view transactions for a specified period of time (such as financial year). You can also print a Transaction Listing from this page.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaFinOnline">
+                <div class="accordionContainer">
+                    <h4>How can I find out how much interest I paid last year?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        Your Annual Interest Details can be viewed on the Contract Details page by selecting the Annual Interest link.
+                        It shows the total interest you have paid in each financial year.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaFinOnline">
+                <div class="accordionContainer">
+                    <h4>Can I print a copy of my contract online?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        No, this is not available online. Please contact our National Customer Solutions Centre on 138 500 for assistance.
+                        Please note that a fee is applicable for reissuing this document.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaFinOnline">
+                <div class="accordionContainer">
+                    <h4>How do I see when all of my regular payments are due?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        You may access your account online to see your payment details. Log in to Mazda Finance Online. Your Billing Schedule can be viewed on the Contract Details page by selecting the Billing Schedule link.
+                        It shows when all payments are due for the life of the loan.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaFinOnline">
+                <div class="accordionContainer">
+                    <h4>Where can I find out how many repayments I have left remaining?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        The Contract Details page will provide you with details of when your contract commenced, how many months your contract has been running for and when it is due to end.
+                        This page also provides other useful information such as the amount of money you borrowed, details of your vehicle, and your repayment details.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaFinOnline">
+                <div class="accordionContainer">
+                    <h4>How do I change my Correspondence Method?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        You can update your Correspondence Method via the Personal Details page. Choosing to receive your correspondence by email means that you can receive and
+                        store notices and other documents electronically and more quickly than if we post them to you.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaFinOnline">
+                <div class="accordionContainer">
+                    <h4>How can I find out when my next payment is due?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        The Contract Details page will advise you of your contracted monthly repayment amount and next due date. This page also provides other useful information such as the amount of money you borrowed, details of your vehicle, and when your contract is due to be finalised.
+                        If you have a weekly or fortnightly payment, details of this can be found on the Payment Details page.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaFinOnline">
+                <div class="accordionContainer">
+                    <h4>How do I update the bank account details for my direct debit?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        From the Payment Details page, you will be able to set up a new direct debit, or update your existing bank account details.
+                        The bank account must be in the same name as a contract party to the loan. For company accounts, the bank account must be in the company name or one of the guarantors and you must be authorised to operate the account. We cannot accept a bank account in the name of a third party or a different company.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaFinOnline">
+                <div class="accordionContainer">
+                    <h4>Will I be able to see all of my contracts online?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        You will be able to view all current contracts of which you are a contract party to - either as a Borrower, Co-Borrower or Guarantor.
+                        You will be able to view some information about finalised contracts from the Contract Details page until such time that it is archived. To obtain information about archived contracts, please contact our National Customer Solutions Centre on 138 500.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaFinOnline">
+                <div class="accordionContainer">
+                    <h4>Why is my current contract not displayed?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        If you have more than one contract with us (either current or finalised), it is possible that you may have more than one Customer Number.
+                        Please contact our National Customer Solutions Centre on 138 500 and we will be happy to update your record to ensure that you are able to view all of your contracts through Mazda Finance Online.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaFinOnline">
+                <div class="accordionContainer">
+                    <h4>Once my contract has been paid out, will I still be able to view it online?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p class="h4">
+                        Information regarding your terminated contract will still be available on the Contract Details page for a few months until this information is archived.
+                        You will still be able to obtain information about your archived contracts by contacting our National Customer Solutions Centre on 138 500.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaFinOnline">
+                <div class="accordionContainer">
+                    <h4>What happens if I forget my password?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        You can reset your password online by selecting the “Forgot your password” link.  Enter your Customer Number or Email and Date of Birth.
+                        We will SMS or email you a temporary password which you will be required to change on your first login.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaFinOnline">
+                <div class="accordionContainer">
+                    <h4>When will changes to my payment details be processed?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p>
+                        From the Payment Details page, you will be able to set up a new direct debit, or update your existing bank account details.
+                        The bank account must be in the same name as a contract party to the loan. For company accounts, the bank account must be in the company name or one of the guarantors and you must be authorised to operate the account. We cannot accept a bank account in the name of a third party or a different company.
+                    </p>
+                </div>
+            </div>
+            <div class="mazdaFinOnline">
+                <div class="accordionContainer">
+                    <h4>Which internet browser do I require in order to access Mazda Finance Online?<span class="plusminuslocation close_accord"></span></h4>
+                </div>
+                <div class="accordionContent">
+                    <p class="h4">
+                        Mazda Finance Online is supported by the following browsers<br />
+                    </p>
+                    <ul class="h5">
+                        <li>Internet Explorer - 6+</li>
+                        <li>Firefox - 2 & 3</li>
+                        <li>Safari - 2 & 3</li>
+                        <li>Chrome - All versions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
