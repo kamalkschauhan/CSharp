@@ -7,18 +7,23 @@ namespace CSharp.RepositoryPattern
 {
     public abstract class EntityBase
     {
-        public int Id { get; protected set; }
+        public Guid Id { get; protected set; }
     }
 
     public class Customer : EntityBase
     {
         public string CustomerName { get; set; }
         public int CustomerAge { get; set; }
+        public DateTime CustomerDOB { get; set; }
+        public bool Active { get; set; }
     }
+
     public class Product : EntityBase
     {
         public string ProductName { get; set; }
         public string Category { get; set; }
+        public int Cost { get; set; }
+        public bool Active { get; set; }
     }
 
     public interface IRepository<T> where T : EntityBase
@@ -26,7 +31,7 @@ namespace CSharp.RepositoryPattern
         void Add(T entity);
         void Update(T entity);
         void Delete(T entity);
-        T GetById(int id);
+        T GetById(Guid id);
         IEnumerable<T> GetAll();
     }
 
@@ -47,15 +52,17 @@ namespace CSharp.RepositoryPattern
             throw new NotImplementedException();
         }
 
-        public T GetById(int id)
+        public T GetById(Guid id)
         { 
             throw new NotImplementedException();
         }
+
         public IEnumerable<T> GetAll()
         {
             throw new NotImplementedException();
         }
     }
+
     public class CustomerRepository : IRepository<Customer>
     {
         public void Add(Customer entity)
@@ -73,15 +80,17 @@ namespace CSharp.RepositoryPattern
             throw new NotImplementedException();
         }
 
-        public Customer GetById(int id)
+        public Customer GetById(Guid id)
         {
             throw new NotImplementedException();
         }
+
         public IEnumerable<Customer> GetAll()
         {
             throw new NotImplementedException();
         }
     }
+
     public class ProductRepository : IRepository<Product>
     {
         public void Add(Product entity)
@@ -99,14 +108,14 @@ namespace CSharp.RepositoryPattern
             throw new NotImplementedException();
         }
 
-        public Product GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-        public IEnumerable<Product> GetAll()
+        public Product GetById(Guid id)
         {
             throw new NotImplementedException();
         }
 
+        public IEnumerable<Product> GetAll()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -1,10 +1,12 @@
-using DecoratorPattern;
+ï»¿using DecoratorPattern;
 using Microsoft.CSharp;
+using Newtonsoft.Json;
 using System;
 using System.CodeDom.Compiler;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Globalization;
@@ -14,17 +16,17 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-
+using CSharp.RepositoryPattern;
 
 // testing once more 
 
 namespace CSharp
 {
-    //S – Single Responsibility Principle : It says that There should never be more than one reason for a class to change.
-    //O – Open/Closed Principle : It says that Classes should be open for extension, but closed for modification.
-    //L – Liskov’s Substitution Principle : Derived types must be completely substitutable for their base types.
-    //I – Interface Segregation Principle :  Client should not be forced to implement interfaces they don’t use.
-    //D – Dependency Inversion Principle : It says that
+    //S â€“ Single Responsibility Principle : It says that There should never be more than one reason for a class to change.
+    //O â€“ Open/Closed Principle : It says that Classes should be open for extension, but closed for modification.
+    //L â€“ Liskovâ€™s Substitution Principle : Derived types must be completely substitutable for their base types.
+    //I â€“ Interface Segregation Principle :  Client should not be forced to implement interfaces they donâ€™t use.
+    //D â€“ Dependency Inversion Principle : It says that
     //    High-level modules should not depend on low-level modules. Both should depend on abstractions.
     //    Abstractions should not depend on details. Details should depend on abstractions.
 
@@ -491,14 +493,30 @@ namespace CSharp
 
     /// <summary>
     //  class InheritFromStatic : MyExtensions {}
-    /// 1. static class 'MyExtensions' is Sealed and cannot be inherited from.
+    // 1. static class 'MyExtensions' is Sealed and cannot be inherited from.
     //  static class MyExtensions : ICommonImplements1
-    /// 2. cannot inherit from any class/interface except Object
-    /// 3. Contains only static members.
-    /// 4. Cannot be instantiated hence cannot contain Instance Constructors.
-    /// 5. may or may not have static constructor
-    /// 6. static class examples .. System.Math 
+    // 2. cannot inherit from any class/interface except Object
+    // 3. Contains only static members.
+    // 4. Cannot be instantiated hence cannot contain Instance Constructors.
+    // 5. may or may not have static constructor
+    // 6. static class examples .. System.Math 
     /// </summary>
+
+    class GenericsTest
+    {
+        public T Test<T>(T t)
+        {
+            return t;
+        }
+    }
+
+    class SimpleDummyClass
+    {
+        public SimpleDummyClass()
+        {
+            Console.WriteLine("/// Start : Inside SimpleDummyClass via Generics");
+        }
+    }
 
     class Program
     {
@@ -634,7 +652,6 @@ namespace CSharp
         //creating a new derived type
         //refer MyExtensions
 
-
         static string CaesarEncrypt(string value, int shift)
         {
             char[] buffer = value.ToCharArray();
@@ -720,9 +737,71 @@ namespace CSharp
             Console.WriteLine("Executed by Delegate:{0,3:N0}", x / y);
         }
 
+        public static List<T> GetListFromDataTable<T>(
+            ArrayList arrayList, 
+            string tableName, 
+            string columnName
+            //,string jsonData
+            )
+        {
+            //// Find out how many rows are in your table and create an aray of that length
+            List<T> values = new List<T>();
+            
+            // Loop through the table and row and add them into the array
+            foreach (object obj in arrayList)
+            {
+                values.Add((T)obj);
+            }
+
+            //var job = JsonConvert.DeserializeObject<T>(jsonData);
+            //foreach (var item in job.Value)
+            //{
+            //    values.Add((T)item);
+            //        //lstjob.Add(item);
+            //}
+
+            return values;
+        }
+
         [STAThread]
         public static void Main()
         {
+            ///
+            /// Start : Generics test
+            /// 
+
+            GenericsTest c1 = new GenericsTest();
+            string ret1 = c1.Test<string>("mastan");
+            int ret2 = c1.Test<int>(10);
+            SimpleDummyClass myc = c1.Test<SimpleDummyClass>(new SimpleDummyClass());
+            List<GenericsTest> Lmyc = c1.Test<List<GenericsTest>>(new List<GenericsTest>());
+            string jsonString = @"{
+              'Email': 'james@example.com',
+              'Active': true,
+              'CreatedDate': '2013-01-20T00:00:00Z',
+              'Roles': [
+                'User',
+                'Admin'
+              ]
+            }";
+
+            //var objDynamic = (List<GenericsTest>)JsonConvert.DeserializeObject<object>(jsonString);
+            //"Unable to cast object of type 'Newtonsoft.Json.Linq.JObject' to type 'System.Collections.Generic.List`1[CSharp.GenericsTest]'.";
+
+            ArrayList arrayList = new ArrayList();
+            arrayList.Add(new object());
+            //List<string> lstName = GetListFromDataTable<string>(arrayList, "Products", "ProductName");
+            //List<string> lstCategory = GetListFromDataTable<string>(arrayList, "Products", "Category");
+            //List<int> lstCost = GetListFromDataTable<int>(arrayList, "Products", "Cost");
+            //List<Guid> lstId = GetListFromDataTable<Guid>(arrayList, "Products", "Id");
+            //List<GenericsTest> lstIds = GetListFromDataTable<GenericsTest>(arrayList, "Products", "Id");
+
+            Console.WriteLine("");
+
+            ///
+            /// End : Generics test
+            ///
+
             ///
             /// Start : Execute Decorator Pattern
             ///
@@ -1134,6 +1213,40 @@ namespace CSharp
 
             Console.ReadLine();
 
+            /******************************/
+            // Convert Number to Words
+            /******************************/
+            string isNegative = "";
+            try
+            {
+                int number;
+                Console.Write("Input something and press enter:");
+
+                while (true)
+                {
+                    var userInput = Console.ReadLine();
+                    userInput = Convert.ToDouble(userInput).ToString();
+
+                    if (!int.TryParse(userInput, out number))
+                        Console.WriteLine("I only accept int");
+                    else
+                    {
+                        if (userInput.Contains("-"))
+                        {
+                            isNegative = "Minus ";
+                            userInput = userInput.Substring(1, userInput.Length - 1);
+                        }
+                        Console.WriteLine("The number in currency fomat is \n{0}", isNegative + NumberToWords.ConvertToWords(userInput));
+                    }
+                    Console.Write("Input something and press enter:");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            /******************************/
+            /******************************/
         }
         static string[] code = {
             "using System;"+

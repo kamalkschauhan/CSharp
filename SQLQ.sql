@@ -11,6 +11,8 @@ FROM DataMig..aatdisplay where tcty in ('bru','cai','yyz','ams') order by pkid d
 
 SELECT * FROM Segments where [TransactionRef] = 788845862
 
+--data generator website
+http://www.generatedata.com/#generator
 
 declare @GTIDs varchar(max), @pos int, @nextpos int, @valuelen int
 set @GTIDs= '146502/146504/1C5A03/1C5A04/F10145/1C5A05/C2A459/C2A45A'
@@ -270,6 +272,29 @@ insert into ApolloPCC (PCC) values ('M34')
  insert into ApolloPCC (PCC) values ('12I8')
 insert into ApolloPCC (PCC) values ('12R5')
 
+/****** Object:  UserDefinedFunction [dbo].[RemoveAllSpaces]    Script Date: 01-05-2019 09:55:36 ******/
+/****** remove all spaces from a string ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER FUNCTION [dbo].[RemoveAllSpaces]
+(
+    @InputStr varchar(max)
+)
+RETURNS varchar(max)
+AS
+BEGIN
+    declare @ResultStr varchar(8000)
+    set @ResultStr = @InputStr
+
+    while charindex(' ', @ResultStr) > 0
+        set @ResultStr = replace(@InputStr, ' ', '')
+
+    return @ResultStr
+END
+------------------------------
+
 select top 1 * from aatdisplay 
 select * from processlog where value='5b3n'
 select * from processlog where value='3M39'
@@ -497,11 +522,52 @@ BEGIN
 END
 GO
 
-
+/****** Object:  Trigger [dbo].[UserSetModifiedDate]    Script Date: 01-05-2019 08:38:48 ******/
 SET ANSI_NULLS ON
 GO
- SET QUOTED_IDENTIFIER ON
+SET QUOTED_IDENTIFIER ON
 GO
+ALTER TRIGGER [dbo].[UserSetModifiedDate]
+   ON  [dbo].[User]
+   instead of UPDATE
+AS 
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+    SET NOCOUNT ON;
+
+    --select * from deleted
+    --select * from inserted
+
+    --select 
+    --    INSERTED.ID,
+    --    INSERTED.UserSSOId,
+    --    INSERTED.FirstName,
+    --    INSERTED.LastName,
+    --    deleted.CreatedBy,
+    --    deleted.CreatedDate,
+    --    INSERTED.ModifiedBy,
+    --    INSERTED.ModifiedDate,
+    --    INSERTED.IsActive
+    --from inserted
+    --join deleted on inserted.ID = deleted.ID
+
+    UPDATE [User]
+    SET 
+        [User].[UserSSOId]    = INSERTED.UserSSOId,
+        [User].[FirstName]    = INSERTED.FirstName,
+        [User].[LastName]     = INSERTED.LastName,
+        [User].[CreatedBy]    = DELETED.CreatedBy,
+        [User].[CreatedDate]  = DELETED.CreatedDate,
+        [User].[ModifiedBy]   = INSERTED.ModifiedBy,
+        [User].[ModifiedDate] = INSERTED.ModifiedDate,
+        [User].[IsActive]     = INSERTED.IsActive
+    FROM [User] 
+        JOIN INSERTED ON [User].ID = INSERTED.ID
+        JOIN DELETED  ON [User].ID = DELETED.ID
+END
+
+
 ALTER TRIGGER trd_MyTable 
    ON  UATTagList
    INSTEAD OF INSERT
@@ -1064,18 +1130,20 @@ WHILE @CurrentThread <=  @NoOfThreads
     SET @CurrentThread = @CurrentThread + 1
 END
 
+sp_rename 'trigSetModifiedDate', 'trigUserSetModifiedDate';
+
 select * from city_pcc_map
 
 select top 1 * from (select top 5 * from marks order by marks desc) marks order by marks
- select len('dd')
+select len('dd')
 exec spAddAATDisplay '<?xml version="1.0" ?><ArrayOfAATDisplay xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><AATDisplay></AATDisplay></ArrayOfAATDisplay>'
  -------------------------- UK SERVER ---------------------------
 select count(*) Apollopcc from HostDataExtract_1V.dbo.apollopcc where process_status is not null
 select count(*) V_aatdisplay from HostDataExtract_1V.dbo.aatdisplay 
- select count(*) V_uatdisplay from HostDataExtract_1V.dbo.uatdisplay 
+select count(*) V_uatdisplay from HostDataExtract_1V.dbo.uatdisplay 
 select count(*) Galileopcc from HostDataExtract_1G.dbo.Galileopcc where process_status is not null
 select count(*) G_aatdisplay from HostDataExtract_1G.dbo.aatdisplay 
- select count(*) G_uatdisplay from HostDataExtract_1G.dbo.uatdisplay 
+select count(*) G_uatdisplay from HostDataExtract_1G.dbo.uatdisplay 
 
 exec PseudoCityCodes.dbo.spGetCityCodeList
 
@@ -1173,6 +1241,8 @@ Insert Into @tblTemp (Emp_Code, Leave_Date, Backfill_Emp_Code)
 --21614    00000    2009-08-26 00:00:00.000
 
 ---==================================
+select lower(substring([FirstName], 1, 1) + [LastName]) from [User]
+select upper(substring([FirstName], 1, 1) + [LastName]) from [User]
 
 select * from SixSigmaSummary
  select * from sixsigma_data where emp_id = '8935'
@@ -1983,6 +2053,8 @@ end
 select * from ttbr_fo where 1=2
 select * from ttbr_fo where 'a'='b'
 
+Select * From Sys.sql_modules
+Select * From Sys.Objects
 select * from information_schema.tables where table_name = 'ttbr_fo'
 
 SELECT DISTINCT (a.Amount) FROM [EmployeeSalaryDetails] A
