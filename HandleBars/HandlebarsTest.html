@@ -1,0 +1,79 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <style type="text/css">
+        body {
+            font: 15px arial,sans-serif;
+        }
+
+        h1 {
+            margin: 0 0 10px 0;
+            padding: 5px;
+            font-size: 24px;
+            background-color: #999;
+            color: #fff;
+        }
+
+        table {
+            margin: 10px;
+        }
+
+        th, td {
+            padding: 5px;
+            border: 1px solid #999;
+        }
+
+        th {
+            background: #ccc;
+        }
+
+        tr:nth-child(odd) {
+            background: #eee;
+        }
+
+        td a {
+            color: #000;
+            text-decoration: underline;
+        }
+    </style>
+
+    <title>Handlebars Example</title>
+
+    <script lang="ja" type="text/javascript">
+        $(document).ready(function () {
+
+            var myInfo = "<p>My name is {{name}} and I live at {{street}} in {{city}}, {{state}}.</p>";
+            var myInfo2 = "<p>Hello, my name is {{name}}. I am from {{hometown}}. I have " +
+                "{{kids.length}} kids:</p>" +
+                "<ul>{{#kids}}<li>{{name}} is {{age}}</li>{{/kids}}</ul>";
+
+            var template = Handlebars.compile(myInfo);
+            var template2 = Handlebars.compile(myInfo2);
+            //var template = Handlebars.compile($("#handlebarsdemo").html());
+
+            var data = template({ name: "Derek", street: "123 Main St", city: "Pittsburgh", state: "PA" });
+            var data2 = template2({
+                "name": "Alan", "hometown": "Somewhere, TX",
+                "kids": [{ "name": "Jimmy", "age": "12" }, { "name": "Sally", "age": "4" }]
+            });
+
+
+            // Update the div with the completed output
+            $("#dereksdiv")[0].innerHTML += data;
+            $("#dereksdiv")[0].innerHTML += data2;
+        });
+    </script>
+</head>
+<body>
+    <h1>Handlebars Example</h1>
+    <div id="dereksdiv"></div>
+    <script id="handlebarsdemo" type="text/x-handlebars-template">
+        <div>
+            My name is {{name}}. I am a {{occupation}}.
+        </div>
+    </script>
+</body>
+</html>
