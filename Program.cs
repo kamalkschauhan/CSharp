@@ -17,6 +17,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using CSharp.RepositoryPattern;
+using System.Threading.Tasks;
 
 // testing once more 
 
@@ -763,6 +764,54 @@ namespace CSharp
             return values;
         }
 
+        public async Task MyMethodAsync()
+        {
+            Task<int> longRunningTask = LongRunningOperationAsync();
+            // independent work which doesn't need the result of LongRunningOperationAsync can be done here
+
+            //and now we call await on the task 
+            int result = await longRunningTask;
+            //use the result 
+            Console.WriteLine(result);
+        }
+
+        public async Task<int> LongRunningOperationAsync() // assume we return an int from this long running operation 
+        {
+            await Task.Delay(1000); // 1 second delay
+            return 1;
+        }
+
+        private async void button1_Click(object sender, EventArgs e)
+        {
+            // Call the method that runs asynchronously.
+            string result = await WaitAsynchronouslyAsync();
+
+            // Call the method that runs synchronously.
+            //string result = await WaitSynchronously ();
+
+            // Display the result.
+            result += result;
+        }
+
+        // The following method runs asynchronously. The UI thread is not
+        // blocked during the delay. You can move or resize the Form1 window 
+        // while Task.Delay is running.
+        public async Task<string> WaitAsynchronouslyAsync()
+        {
+            await Task.Delay(10000);
+            return "Finished";
+        }
+
+        // The following method runs synchronously, despite the use of async.
+        // You cannot move or resize the Form1 window while Thread.Sleep
+        // is running because the UI thread is blocked.
+        public async Task<string> WaitSynchronously()
+        {
+            // Add a using directive for System.Threading.
+            Thread.Sleep(10000);
+            return "Finished";
+        }
+
         [STAThread]
         public static void Main()
         {
@@ -801,6 +850,20 @@ namespace CSharp
             ///
             /// End : Generics test
             ///
+
+            ///
+            /// Start : asyn & wait testing
+            ///
+            Console.WriteLine("");
+            Console.WriteLine("/// Start : asyn & wait testing");
+            Program objProgram = new Program();
+            objProgram.MyMethodAsync().Wait();
+            Console.WriteLine("/// End   : asyn & wait testing");
+            Console.WriteLine("");
+            ///
+            /// End : asyn & wait testing
+            ///
+
 
             ///
             /// Start : Execute Decorator Pattern

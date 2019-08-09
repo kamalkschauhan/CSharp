@@ -49,7 +49,7 @@ BEGIN
   SELECT @pos = @nextpos
 END
 --select * from @gtid
-select * FROM PCC_GTID_MAP WHERE PCC = 'k66' And GTID not in (Select gtid from @gtid) and  gtid='C76711'
+select * FROM PCC_GTID_MAP WHERE PCC = 'k66' And GTID not in (Select gtid from @gtid) and gtid='C76711'
  --DELETE FROM PCC_GTID_MAP WHERE PCC = @ACT And GTID not in (Select gtid from @gtid)
 select * FROM UATDisplay WHERE GTID in (Select gtid from PCC_GTID_MAP where PCC = 'k66') and termtype like '%hco%'
  declare @GTIDs varchar(max)
@@ -2277,3 +2277,5 @@ select * from Course
 select * from Enrollment
 
 select * from [Sales].[ShoppingCartItem]
+
+select distinct(loan_type) from trans_loan_detail
