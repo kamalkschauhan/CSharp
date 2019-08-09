@@ -85,16 +85,41 @@
   <ItemGroup>
     <Content Include="clearsearch.png" />
     <Content Include="FAQContent.html" />
-    <Content Include="HTMLPage1.htm" />
+    <Content Include="HandleBars\.gitignore" />
+    <Content Include="HandleBars\cat-1.jpg" />
+    <Content Include="HandleBars\cat-2.jpg" />
+    <Content Include="HandleBars\css\styles.css" />
+    <Content Include="HandleBars\dog-1.jpg" />
+    <Content Include="HandleBars\groceries.js" />
+    <Content Include="HandleBars\HandlebarsTest.html" />
+    <Content Include="HandleBars\HTMLPage2.html" />
+    <Content Include="HandleBars\HTMLPage1.html" />
+    <None Include="HandleBars\groceries.handlebars" />
+    <Content Include="HandleBars\HTMLPage6.html" />
+    <Content Include="HandleBars\HTMLPage5.html" />
+    <Content Include="HandleBars\HTMLPage4.html" />
+    <Content Include="HandleBars\HTMLPage3.html" />
+    <Content Include="HandleBars\index.html" />
+    <Content Include="HandleBars\js\helpers\calculateAge.js" />
+    <Content Include="HandleBars\js\main-bundled.js" />
+    <Content Include="HandleBars\js\main.js" />
+    <Content Include="HandleBars\webpack.config.js" />
+    <Content Include="JSTest.htm" />
     <Content Include="search.png" />
     <Content Include="showhideminus.png" />
     <Content Include="showhideplus.png" />
+    <Content Include="HandleBars\ntt-logo-horz.png" />
+    <Content Include="HandleBars\ntt-logo.png" />
     <Content Include="SQLQ.sql" />
     <Content Include="t.js" />
     <Content Include="TextFile1.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="HandleBars\js\myTemplate.hbs" />
+    <None Include="HandleBars\package.json" />
+    <None Include="HandleBars\pets-data.json" />
+    <None Include="HandleBars\README.md" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
