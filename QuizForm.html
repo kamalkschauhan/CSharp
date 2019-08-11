@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            jQuery.expr[':'].contains = function (a, i, m) {
+                return jQuery(a).text().toLowerCase()
+                    .indexOf(m[3].toLowerCase()) >= 0;
+            };
+
+            solution();
+        });
+
+        function should_be_checked(question_index, choice_index) {
+
+        }
+
+        function solution() {
+            var fieldsets = $($("fieldset")).length;
+            alert(fieldsets);
+            var optionsLength;
+            for (var i = 0; i < fieldsets; i++) {
+                optionsLength = $($($("fieldset"))[i]).children("input").length;
+                for (var j = 0; j < optionsLength; j++) {
+                    $($($("fieldset"))[3]).children("input")[3]
+                }
+            }
+
+            $(".accordionContainer:not(:contains(" + seachKey + "))").hide();
+
+        }
+    </script>
+</head>
+<body>
+    <form>
+        <fieldset id="question-1">
+            <legend>Easy question</legend>
+            <input type="checkbox" id="choice-1-1">Incorrect answer</input>
+            <input type="checkbox" id="choice-1-2" checked>Correct answer</input>
+            <input type="checkbox" id="choice-1-3" checked>Correct answer</input>
+            <input type="checkbox" id="choice-1-4" checked>Incorrect answer</input>
+            <input type="checkbox" id="choice-1-5">Incorrect answer</input>
+        </fieldset>
+        <fieldset id="question-2">
+            <legend>Another sample question</legend>
+            <input type="checkbox" id="choice-2-1">Incorrect answer</input><br>
+            <input type="checkbox" id="choice-2-2" checked>Correct answer</input>
+        </fieldset>
+        <fieldset id="question-3">
+            <legend>Easy question</legend>
+            <input type="checkbox" id="choice-3-1" checked>Correct answer</input>
+            <input type="checkbox" id="choice-3-2">Incorrect answer</input>
+            <input type="checkbox" id="choice-3-3">Incorrect answer</input>
+            <input type="checkbox" id="choice-3-4">Correct answer</input>
+            <input type="checkbox" id="choice-3-5" checked>Correct answer</input>
+        </fieldset>
+        <fieldset id="question-4">
+            <legend>Easy question</legend>
+            <input type="checkbox" id="choice-4-1">Incorrect answer</input>
+            <input type="checkbox" id="choice-4-2" checked>Correct answer</input>
+            <input type="checkbox" id="choice-4-3">Incorrect answer</input>
+            <input type="checkbox" id="choice-4-4" checked>Correct answer</input>
+            <input type="checkbox" id="choice-4-5">Incorrect answer</input>
+        </fieldset>
+    </form>
+</body>
+</html>

@@ -812,6 +812,69 @@ namespace CSharp
             return "Finished";
         }
 
+        public int Solution(int[] A)
+        {
+
+            Console.WriteLine(string.Join(",", A));
+            Console.WriteLine("");
+            Console.WriteLine(string.Join(",", A.Where(i => i >= 1).ToArray()));
+            Console.WriteLine("");
+            //return 6;
+            // write your code in C# 6.0 with .NET 4.5 (Mono)
+            int[] nonNegative = A.Where(i => i >= 1).ToArray();
+            if (nonNegative.Length == 0)
+                return 1;
+            Array.Sort(nonNegative);
+
+            //foreach (int i in nonNegative)
+            //{
+            //    Console.Write(i + ", ");
+            //}
+            Console.WriteLine(string.Join(",", nonNegative));
+
+            //Console.WriteLine(string.Join(",", A));
+            Console.WriteLine("");
+            
+            int firstInt = ++nonNegative[0];
+            for (int w = 0; w < nonNegative.Length; w++, firstInt++)
+            {
+                //Console.Write(firstInt + ", ");
+                //Console.WriteLine("");
+                //Console.Write("A.Contains(firstInt) : " + nonNegative.Contains(firstInt));
+                //Console.WriteLine("");
+                if (!nonNegative.Contains(firstInt))
+                {
+                    break;
+                }
+            }
+
+            return firstInt;
+            //return 6;
+        }
+
+        public int ReportingSoldiersCount(int[] ranks)
+        {
+            int _iLength = ranks.Length;
+            Array.Sort(ranks);
+            int _reportingSoldiers = 0;
+            int i = 0;
+
+            //int next_superior_reporting = 0;
+            foreach (int rank in ranks)
+            {
+                int upper = rank + 1;
+                if (ranks.Contains(upper))
+                {
+                    if (i <= _iLength)
+                    {
+                        _reportingSoldiers = _reportingSoldiers + 1;
+                    }
+                }
+                i++;
+            }
+            return _reportingSoldiers;
+        }
+
         [STAThread]
         public static void Main()
         {
@@ -849,6 +912,48 @@ namespace CSharp
 
             ///
             /// End : Generics test
+            ///
+
+            ///
+            /// Start : int array test
+            ///
+            Console.WriteLine("/// Start : int array test");
+            Console.WriteLine("");
+            Program objProgram2 = new Program();
+            Console.WriteLine("missing int : " + objProgram2.Solution(new int[] { -32, 11, -14, 23, 28, 19, -5, 6, 8, 10 }));
+            Console.WriteLine("");
+            Console.WriteLine("missing int : " + objProgram2.Solution(new int[] { 9, 0, 1, 2, 5, 4, 5, 6, 8, 10 }));
+            Console.WriteLine("");
+            Console.WriteLine("missing int : " + objProgram2.Solution(new int[] { 12, 1, 1, 2, 3, 4, 5, 6, -8, 9 }));
+            Console.WriteLine("");
+            Console.WriteLine("missing int : " + objProgram2.Solution(new int[] { -1, -3, -1, -3, -1, -3, -1, -3, -1, -3}));
+            Console.WriteLine("");
+            Console.WriteLine("missing int : " + objProgram2.Solution(new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }));
+            Console.WriteLine("");
+            Console.WriteLine("/// End   : int array test");
+            Console.WriteLine("");
+            Console.WriteLine("");
+
+
+            Console.WriteLine("Reporting soldiers : "
+                + objProgram2.ReportingSoldiersCount(new int[] { 3, 4, 3, 0, 2, 2, 3, 0, 0 }));
+            Console.WriteLine("Reporting soldiers : "
+                + objProgram2.ReportingSoldiersCount(new int[] { 11, 10, 10, 10, 10, 8, 8, 7, 6, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 1, 0 }));
+            Console.WriteLine("Reporting soldiers : "
+                + objProgram2.ReportingSoldiersCount(new int[] { 4, 3, 1, 0, 0, 0 }));
+
+            Console.WriteLine("Reporting soldiers : "
+                + objProgram2.ReportingSoldiersCount(new int[] { 4, 2, 0 }));
+
+            Console.WriteLine("Reporting soldiers : "
+                + objProgram2.ReportingSoldiersCount(new int[] { -2, -8, -3 }));
+
+            Console.WriteLine("");
+            Console.WriteLine("");
+            Console.ReadLine();
+            return;
+            ///
+            /// End : int array test
             ///
 
             ///
@@ -923,10 +1028,7 @@ namespace CSharp
             ABC o2 = new ABC("Hello");
             ABC.TimePass();
             o.GetCommon();
-            int t = 10;
-            int k = t++;
-            // value types are always copied by value.
-
+            
             //1. Hashtable threadsafe but Dictionary not.
             //2. Dictionary strongly typed hence fast but Hashtable weakly typed (needs boxing and unboxing), hence slow.
             //3. dictionary throws 'KeyNotFoundException' on missing key retrieval but Hashtable returns null value.
@@ -959,11 +1061,27 @@ namespace CSharp
             int a = 10;
             int b = 10;
 
+            Console.WriteLine("int a = 10;");
+            Console.WriteLine("int b = 10;");
+            Console.WriteLine("StringBuilder sb1 = new StringBuilder(\"Asp.Net\");");
+            Console.WriteLine("StringBuilder sb2 = new StringBuilder(\"Asp.Net\");");
+            
             Console.WriteLine("a == b : " + (a == b));
             Console.WriteLine("a.Equals(b) : " + (a.Equals(b)));
 
             Console.WriteLine("sb1 == sb2 : " + (sb1 == sb2));
             Console.WriteLine("sb1.Equals(sb2) : " + (sb1.Equals(sb2)));
+
+            String str0 = "hello";
+            String str2 = str0;
+            String str3 = "hello";
+            Console.WriteLine("str0 : " + str0);
+            Console.WriteLine("str2 = str0 : " + str2);
+            Console.WriteLine("str3 : " + str3);
+            Console.WriteLine("str0 == str3 : " + (str0 == str3));
+            Console.WriteLine("str0.Equals(str3) : " + str0.Equals(str3));
+            Console.WriteLine("str0 == str2 : " + (str0 == str2));
+            Console.WriteLine("str0.Equals(str2) : " + str0.Equals(str2));
 
             Console.WriteLine("Dictionary : ");
             foreach (KeyValuePair<int, string> pair in dictionary)
@@ -972,6 +1090,10 @@ namespace CSharp
             }
             //t = t + 1;
             //k = k + 6;
+            int t = 10;
+            int k = t++;
+            // value types are always copied by value.
+
             Console.WriteLine("");
             Console.WriteLine("t : " + t); //11
             Console.WriteLine("k : " + k); //10
@@ -1116,25 +1238,17 @@ namespace CSharp
             PrintIndexAndValues(myAL);
 
             // Sorts the values of the ArrayList using the default comparer.
-            myAL.Sort(1, 3, null);
+            myAL.Sort(0, 9, null);
             Console.WriteLine("After sorting from index 1 to index 3 with the default comparer:");
             PrintIndexAndValues(myAL);
 
             // Sorts the values of the ArrayList using the reverse case-insensitive comparer.
             IComparer myComparer = new myReverserClass();
-            myAL.Sort(1, 3, myComparer);
+            myAL.Sort(0, 9, myComparer);
             Console.WriteLine("After sorting from index 1 to index 3 with the reverse case-insensitive comparer:");
             PrintIndexAndValues(myAL);
             Console.WriteLine(myAL.IndexOf("jumped"));
             //Main();
-
-            String str0 = "hello";
-            String str2 = str0;
-            String str3 = "hello";
-            Console.WriteLine(str0);
-            Console.WriteLine(str2);
-            if (str0 == str3)
-                Console.WriteLine("str0 anb str3 are equal ");
 
             Token[] obj = new Token[5];
             obj[0] = new Token();

@@ -105,6 +105,7 @@
     <Content Include="HandleBars\js\main.js" />
     <Content Include="HandleBars\webpack.config.js" />
     <Content Include="JSTest.htm" />
+    <Content Include="QuizForm.html" />
     <Content Include="search.png" />
     <Content Include="showhideminus.png" />
     <Content Include="showhideplus.png" />

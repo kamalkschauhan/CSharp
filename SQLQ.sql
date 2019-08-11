@@ -2279,3 +2279,35 @@ select * from Enrollment
 select * from [Sales].[ShoppingCartItem]
 
 select distinct(loan_type) from trans_loan_detail
+
+create table line (
+          id int not null PRIMARY KEY,
+          name varchar(255) not null,
+          weight int not null,
+          turn int unique not null,
+          check (weight > 0)
+      );
+
+insert into line values (5, 'George Washington', 250, 1);
+insert into line values (4, 'Thomas Jefferson', 175, 5);
+insert into line values (3, 'John Adams', 350, 2);
+insert into line values (6, 'Thomas Jefferson', 400, 3);
+insert into line values (1, 'James Elephant', 500, 6);
+insert into line values (2, 'Will Johnliams', 200, 4);
+
+select * from line order by turn
+
+;With WeightTotal as (
+    Select 
+        *
+        ,RunningWeightTotal = Sum(Weight) Over (Order By turn)
+    From line
+)
+Select * From WeightTotal
+Order by turn desc
+
+--Select top 1 *
+--From WeightTotal
+--Where RunningWeightTotal < = 1000
+--Order by turn desc
+
