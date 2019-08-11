@@ -663,11 +663,11 @@ namespace CSharp
                 // Add shift to all.
                 letter = (char)(letter + shift);
                 // Subtract 26 on overflow.
-                // Add 26 on underflow.
                 if (letter > 'z')
                 {
                     letter = (char)(letter - 26);
                 }
+                // Add 26 on underflow.
                 else if (letter < 'a')
                 {
                     letter = (char)(letter + 26);
@@ -904,7 +904,9 @@ namespace CSharp
             Console.WriteLine("Regex.Split(\"quick\", string.Empty).Length : " + Regex.Split(strDecr, string.Empty).Length);
 
             Console.WriteLine("");
-            Console.WriteLine("CaesarEncrypt(\"quick\", -3) : " + CaesarEncrypt(strDecr, -3));
+            Console.WriteLine("CaesarEncrypt(\"quick\", -3) : " + CaesarEncrypt(strDecr, -3)); 
+            //               -3,-2,-1, 0
+            //"nrfzh" as in ..n, o, p, q
             Console.WriteLine("CaesarEncrypt(\"nrfzh\", 3) : " + CaesarEncrypt(CaesarEncrypt(strDecr, -3), 3));
 
             Console.WriteLine("");
