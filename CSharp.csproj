@@ -121,6 +121,7 @@
     <None Include="HandleBars\package.json" />
     <None Include="HandleBars\pets-data.json" />
     <None Include="HandleBars\README.md" />
+    <None Include="KamalChauhanCV.docx" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -2303,11 +2303,10 @@ select * from line order by turn
         ,RunningWeightTotal = Sum(Weight) Over (Order By turn)
     From line
 )
-Select * From WeightTotal
-Order by turn desc
-
---Select top 1 *
---From WeightTotal
---Where RunningWeightTotal < = 1000
+--Select * From WeightTotal
 --Order by turn desc
+Select top 1 *
+From WeightTotal
+Where RunningWeightTotal < = 1000
+Order by turn desc
 
