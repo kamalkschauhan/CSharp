@@ -65,10 +65,12 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Calc.cs" />
+    <Compile Include="CaptchaImageGeneration\CatpchaImage.cs" />
     <Compile Include="Component\BakeryComponent.cs" />
     <Compile Include="ConcreteComponents\CakeBase.cs" />
     <Compile Include="ConcreteComponents\PastryBase.cs" />
@@ -81,6 +83,12 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryPattern\RepositoryPattern.cs" />
+    <Compile Include="CaptchaImageGeneration\UserLogin.aspx.cs">
+      <DependentUpon>UserLogin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CaptchaImageGeneration\UserLogin.aspx.designer.cs">
+      <DependentUpon>UserLogin.aspx.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="clearsearch.png" />
@@ -94,6 +102,8 @@
     <Content Include="HandleBars\HandlebarsTest.html" />
     <Content Include="HandleBars\HTMLPage2.html" />
     <Content Include="HandleBars\HTMLPage1.html" />
+    <Content Include="CaptchaImageGeneration\UserLogin.aspx" />
+    <None Include="CaptchaImageGeneration\captcha.ashx" />
     <None Include="HandleBars\groceries.handlebars" />
     <Content Include="HandleBars\HTMLPage6.html" />
     <Content Include="HandleBars\HTMLPage5.html" />
@@ -121,7 +131,6 @@
     <None Include="HandleBars\package.json" />
     <None Include="HandleBars\pets-data.json" />
     <None Include="HandleBars\README.md" />
-    <None Include="KamalChauhanCV.docx" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
