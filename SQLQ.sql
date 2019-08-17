@@ -1584,8 +1584,8 @@ select checksum('51;52;56;2204;')
 exec sp_addlinkedserver [192.168.0.28]    
 select * into taxbreakup2 from [192.168.0.28].tektravelsnapshot.dbo.taxbreakup
 
-ALTER TABLE TicketRequest ADD CONSTRAINT DF_TicketRequest_CreatedOn DEFAULT getdate() for CreatedOn
 ALTER TABLE TicketRequest DROP CONSTRAINT DF_TicketRequest_CreatedOn
+ALTER TABLE TicketRequest ADD CONSTRAINT DF_TicketRequest_CreatedOn DEFAULT getdate() for CreatedOn
 
 SELECT CONVERT(VARCHAR(10), GETDATE(), 103) AS [DD/MM/YYYY]
  SELECT CURRENT_TIMESTAMP

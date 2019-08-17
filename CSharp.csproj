@@ -71,18 +71,22 @@
   <ItemGroup>
     <Compile Include="Calc.cs" />
     <Compile Include="CaptchaImageGeneration\CatpchaImage.cs" />
-    <Compile Include="Component\BakeryComponent.cs" />
-    <Compile Include="ConcreteComponents\CakeBase.cs" />
-    <Compile Include="ConcreteComponents\PastryBase.cs" />
-    <Compile Include="ConcreteDecorators\ArtificialScentDecorator.cs" />
-    <Compile Include="ConcreteDecorators\CherryDecorator.cs" />
-    <Compile Include="ConcreteDecorators\CreamDecorator.cs" />
-    <Compile Include="ConcreteDecorators\NameCardDecorator.cs" />
-    <Compile Include="Decorator\Decorator.cs" />
+    <Compile Include="Patterns\Factory\Factory.cs" />
+    <Compile Include="Patterns\Decorator\Component\BakeryComponent.cs" />
+    <Compile Include="Patterns\ConcreteComponents\CakeBase.cs" />
+    <Compile Include="Patterns\ConcreteComponents\PastryBase.cs" />
+    <Compile Include="Patterns\Decorator\ConcreteDecorators\ArtificialScentDecorator.cs" />
+    <Compile Include="Patterns\Decorator\ConcreteDecorators\CherryDecorator.cs" />
+    <Compile Include="Patterns\Decorator\ConcreteDecorators\CreamDecorator.cs" />
+    <Compile Include="Patterns\Decorator\ConcreteDecorators\NameCardDecorator.cs" />
+    <Compile Include="Patterns\Decorator\Decorator\Decorator.cs" />
     <Compile Include="NumberToWords.cs" />
+    <Compile Include="Patterns\Facade\Facade.cs" />
+    <Compile Include="Patterns\Observer\Observer.cs" />
+    <Compile Include="Patterns\Singleton\Singleton.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RepositoryPattern\RepositoryPattern.cs" />
+    <Compile Include="Patterns\Repository\RepositoryPattern.cs" />
     <Compile Include="CaptchaImageGeneration\UserLogin.aspx.cs">
       <DependentUpon>UserLogin.aspx</DependentUpon>
     </Compile>
