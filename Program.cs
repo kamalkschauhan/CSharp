@@ -494,7 +494,7 @@ namespace CSharp
 
     /// <summary>
     //  class InheritFromStatic : MyExtensions {}
-    // 1. static class 'MyExtensions' is Sealed and cannot be inherited from.
+    // 1. static class 'MyExtensions' is Sealed and cannot be inherited from but can be instantiated.
     //  static class MyExtensions : ICommonImplements1
     // 2. cannot inherit from any class/interface except Object
     // 3. Contains only static members.
@@ -510,6 +510,27 @@ namespace CSharp
             return t;
         }
     }
+
+    /// <summary>
+    /// START : private constructor in a class
+    /// </summary>
+    class MyClass
+    {
+        private MyClass() { }
+        public static MyClass GetInstance() { return new MyClass(); }
+    }
+    class Counter
+    {
+        private Counter() { }
+        public static int currentCount;
+        public static int IncrementCount()
+        {
+            return ++currentCount;
+        }
+    }
+    /// <summary>
+    /// END : private constructor in a class
+    /// </summary>
 
     class SimpleDummyClass
     {
@@ -951,7 +972,7 @@ namespace CSharp
             Console.WriteLine("");
             Console.WriteLine("");
             Console.ReadLine();
-            return;
+            //return;
             ///
             /// End : int array test
             ///
