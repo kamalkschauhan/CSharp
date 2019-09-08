@@ -1163,25 +1163,31 @@ namespace CSharp
             dynamic _dSolar = "easterm road";
             _dSolar = 999;
 
-            
+
             //int.TryParse("Hello", out objABC.Target);//A property or indexer may not be passed as an out or ref parameter
 
             //SQL POINT - If you rename a procedure in "Object Explorer" at 
             //"Databases-<db_name>-Programmability-Stored Procedures-<sp_name>",
             //it is renamed within the procedure script also. 
+            
+            //nested transactions
+            //A COMMIT statement in the Outer transaction will commit all the open inner transactions.
+            //A Commit statement in the Outer transaction will not commit the changes rolled back by the inner transactions.
+            //A Rollback statement in the Outer transaction will rollover all the inner transaction, 
+            //irrespective of the Commit/ Rollback fired in the inner transaction(s).
 
-            //WEB SERVICES POINT - A parametric WebMethod will provide option for inputting parameters'
-            //values, only if the parameters are of field/primitive types (e.g. int, string etc)
+             //WEB SERVICES POINT - A parametric WebMethod will provide option for inputting parameters'
+             //values, only if the parameters are of field/primitive types (e.g. int, string etc)
 
-            //IdentifierToken objIdentifierToken1 = new Token();
-            //Compile time error - Cannot implicitly convert type 'CSharp.Token' to 'CSharp.IdentifierToken'. 
-            //An explicit conversion exists (are you missing a cast?)
+             //IdentifierToken objIdentifierToken1 = new Token();
+             //Compile time error - Cannot implicitly convert type 'CSharp.Token' to 'CSharp.IdentifierToken'. 
+             //An explicit conversion exists (are you missing a cast?)
 
-            //IdentifierToken objIdentifierToken2 = ((IdentifierToken)(new Token()));
-            //Runtime error - InvalidCastException was unhandled
-            //"Unable to cast object of type 'CSharp.Token' to type 'CSharp.IdentifierToken'."
+             //IdentifierToken objIdentifierToken2 = ((IdentifierToken)(new Token()));
+             //Runtime error - InvalidCastException was unhandled
+             //"Unable to cast object of type 'CSharp.Token' to type 'CSharp.IdentifierToken'."
 
-            finished = false;
+             finished = false;
             // Run Thread2() in a new thread
             new Thread(new ThreadStart(Thread2)).Start();
             // Wait for Thread2 to signal that it has a result by setting
