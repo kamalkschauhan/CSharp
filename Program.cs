@@ -178,7 +178,6 @@ namespace CSharp
     {
         internal double pi;
         internal int iters;
-        private int i;
 
         //public MyData(int i) {}
         //public MyData() {} //Structs cannot contain explicit parameterless constructors.
@@ -188,11 +187,7 @@ namespace CSharp
             return 1;
         }
 
-        public int Target
-        {
-            get { return i; }
-            set { i = value; }
-        }
+        public int Target { get; set; }
     }
 
     public class PrivateInterface
@@ -222,23 +217,8 @@ namespace CSharp
 
     class Token
     {
-        public int i;
-
-        public int GetI
-        {
-            get
-            {
-                return i;
-            }
-            set
-            {
-                i = value;
-            }
-        }
-        public virtual string Display()
-        {
-            return "Token";
-        }
+        public int GetI { get; set; }
+        public virtual string Display() { return "Token"; }
     }
     class IdentifierToken : Token
     {
@@ -287,7 +267,6 @@ namespace CSharp
     class ABC : ICommonImplement
     {
         int j;
-        private int k;
         static int i;
         const int s = 15;
         static readonly int t = 15;
@@ -310,14 +289,8 @@ namespace CSharp
         {
             Console.WriteLine("instance constructor called. strMessage = " + strMessage);
         }
-        public int Target
-        {
-            get { return k; }
-            set { k = value; }
-        }
-        public static void TimePass()
-        {
-        }
+        public int Target { get; set; }
+        public static void TimePass() {}
         public int GetCommon()
         {
             //static int j; // Can't have static fields defined in method scope
@@ -448,9 +421,22 @@ namespace CSharp
     class Derived : Base
     {
         readonly Foo derivedFoo = new Foo("Derived initializer");
+        static int i;
+        static DateTime dt;
+        static string str;
+
         public Derived()
         {
             Console.WriteLine("Derived constructor");
+            Console.WriteLine("");
+            Console.WriteLine("");
+            Console.WriteLine("/// Start : static fields test");
+            Console.WriteLine("static int i : " + i);
+            Console.WriteLine("static DateTime dt : " + dt);
+            Console.WriteLine("static string str : " + str);
+            Console.WriteLine("/// End   : static fields test");
+            Console.WriteLine("");
+            Console.WriteLine("");
         }
     }
 
@@ -462,6 +448,7 @@ namespace CSharp
     abstract class Foo2
     {
         static bool bYay = false;
+        
         public abstract bool Yay();
         static bool Boo()
         {
@@ -955,7 +942,6 @@ namespace CSharp
             Console.WriteLine("");
             Console.WriteLine("");
 
-
             Console.WriteLine("Reporting soldiers : "
                 + objProgram2.ReportingSoldiersCount(new int[] { 3, 4, 3, 0, 2, 2, 3, 0, 0 }));
             Console.WriteLine("Reporting soldiers : "
@@ -1010,7 +996,7 @@ namespace CSharp
             Console.WriteLine("");
             UseParams(4, 88);
             Console.WriteLine("");
-            ABC o = new ABC();
+            ABC objABC = new ABC();
 
             //factory with dependency injection
             OCP objOCP = new OCP(new TextLogger());
@@ -1046,9 +1032,9 @@ namespace CSharp
 
             Console.WriteLine("");
 
-            ABC o2 = new ABC("Hello");
+            ABC objABC2 = new ABC("Hello");
             ABC.TimePass();
-            o.GetCommon();
+            objABC.GetCommon();
             
             //1. Hashtable threadsafe but Dictionary not.
             //2. Dictionary strongly typed hence fast but Hashtable weakly typed (needs boxing and unboxing), hence slow.
@@ -1177,6 +1163,8 @@ namespace CSharp
             dynamic _dSolar = "easterm road";
             _dSolar = 999;
 
+            
+            //int.TryParse("Hello", out objABC.Target);//A property or indexer may not be passed as an out or ref parameter
 
             //SQL POINT - If you rename a procedure in "Object Explorer" at 
             //"Databases-<db_name>-Programmability-Stored Procedures-<sp_name>",
