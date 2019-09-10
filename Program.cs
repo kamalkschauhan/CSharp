@@ -1158,6 +1158,10 @@ namespace CSharp
             var _vSolar = "testing system";
             //_vSolar = 999; //Cannot implicitly convert type 'int' to 'string'
 
+            string strVarTest = null;
+            var _varTest = strVarTest;
+            //_vSolar = 999; //Cannot implicitly convert type 'int' to 'string'
+
             int varLength = _vSolar.Length;
 
             dynamic _dSolar = "easterm road";
