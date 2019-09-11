@@ -48,15 +48,16 @@ namespace CSharp.Patterns.Singleton
     {
         // Static members are 'eagerly initialized', that is, 
         // immediately when class is loaded for the first time.
-        // .NET guarantees thread safety for static initialization
-        private static readonly LoadBalancer _instance =
-          new LoadBalancer();
 
+        // .NET guarantees thread safety for static initialization
+        //private static readonly LoadBalancer _instance =
+        //  new LoadBalancer();
+
+        private static LoadBalancer _instance;
+        private static readonly object mylockobject = new object();
         // Type-safe generic list of servers
         private List<Server> _servers;
-        private Random _random = new Random();
 
-        // Note: constructor is 'private'
         private LoadBalancer()
         {
             // Load list of available servers
@@ -70,8 +71,19 @@ namespace CSharp.Patterns.Singleton
             };
         }
 
+        private Random _random = new Random();
+
+        // Note: constructor is 'private'
+        
         public static LoadBalancer GetLoadBalancer()
         {
+            lock (mylockobject)
+            {
+                if (_instance == null)
+                {
+                    _instance = new LoadBalancer();
+                }
+            }
             return _instance;
         }
 
