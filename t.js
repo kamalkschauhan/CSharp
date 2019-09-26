@@ -58,8 +58,41 @@ console.log("typeof variable : " + typeof variable); // "object"
 var nullVariable = null; // null
 console.log("typeof nullVariable : " + typeof nullVariable); // "object"
 
-if( variable === null ) {
-    console.log('variable is null');
-} else {
-    console.log('variable is not null');
-}
+//if( variable === null ) { //t.js:61 Uncaught ReferenceError: variable is not defined
+//    console.log('variable is null');
+//} else {
+//    console.log('variable is not null');
+//}
+
+
+const promise = new Promise((resolve, reject) => {
+    const request = new XMLHttpRequest();
+
+    request.open("GET", "https://api.icndb.com/jokes/random");
+    request.onload = () => {
+        if (request.status === 200) {
+            resolve(request.response);
+        } else {
+            reject(Error(request.statusText));
+        }
+    };
+
+    request.onerror = () => {
+        reject(Error("Error fetching data."));
+    };
+
+    request.send();
+});
+
+console.log("Asynchronous request made.");
+
+promise.then(
+    data => {
+        console.log("Got data! Promise fulfilled.");
+        document.body.textContent = JSON.parse(data).value.joke;
+    },
+    error => {
+        console.log("Promise rejected.");
+        console.log(error.message);
+    }
+);
