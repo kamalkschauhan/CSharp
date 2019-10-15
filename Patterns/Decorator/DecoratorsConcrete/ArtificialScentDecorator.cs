@@ -5,8 +5,8 @@ namespace DecoratorPattern
         public ArtificialScentDecorator(BakeryComponent baseComponent)
             : base(baseComponent)
         {
-            this.m_Name = "Artificial Scent";
-            this.m_Price = 3.0;
+            m_Name = "Artificial Scent";
+            m_Price = 3.0;
         }
     }
 }

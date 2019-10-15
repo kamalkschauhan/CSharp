@@ -5,8 +5,8 @@ namespace DecoratorPattern
         public CreamDecorator(BakeryComponent baseComponent)
             : base(baseComponent)
         {
-            this.m_Name = "Cream";
-            this.m_Price = 1.0;
+            m_Name = "Cream";
+            m_Price = 1.0;
         }
     }
 }

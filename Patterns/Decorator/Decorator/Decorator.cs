@@ -17,7 +17,7 @@ namespace DecoratorPattern
             return string.Format("{0}, {1}", m_BaseComponent.GetName(), m_Name);
         }
 
-        public override double  GetPrice()
+        public override double GetPrice()
         {
             return m_Price + m_BaseComponent.GetPrice();
         }
