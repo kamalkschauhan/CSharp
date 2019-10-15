@@ -2320,3 +2320,47 @@ From WeightTotal
 Where RunningWeightTotal < = 1000
 Order by turn desc
 
+---------------------------------------------
+--   START   :   DELETE DUPLICATE ROWS
+---------------------------------------------
+/****** Object:  Table [dbo].[Emp]    Script Date: 15-10-2019 10:11:08 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Emp]( [empid] [int] NULL, [name] [varchar](50) NULL) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+INSERT [dbo].[Emp] ([empid], [name]) VALUES (1, N'abc')
+INSERT [dbo].[Emp] ([empid], [name]) VALUES (1, N'def')--
+INSERT [dbo].[Emp] ([empid], [name]) VALUES (1, N'def')----
+INSERT [dbo].[Emp] ([empid], [name]) VALUES (2, N'abc')--
+INSERT [dbo].[Emp] ([empid], [name]) VALUES (2, N'abc')----
+INSERT [dbo].[Emp] ([empid], [name]) VALUES (3, N'xyz')--
+INSERT [dbo].[Emp] ([empid], [name]) VALUES (3, N'xyz')----
+INSERT [dbo].[Emp] ([empid], [name]) VALUES (4, N'jkl')--
+INSERT [dbo].[Emp] ([empid], [name]) VALUES (4, N'jkl')----
+GO
+
+SELECT * FROM Emp
+SELECT empid, name, COUNT(*) as CNT FROM Emp GROUP BY empid, name -- HAVING COUNT(*) > 1
+
+-- METHOD 1
+WITH cte AS (    
+   SELECT empid , name ,    
+   row_number() OVER(PARTITION BY empid , name order by empid ) AS [rn]    
+   FROM dbo.Emp    
+)    
+DELETE cte WHERE [rn] > 1  
+
+---------------------------------------------
+--   END   :   DELETE DUPLICATE ROWS
+---------------------------------------------
+
+
+
+
+
