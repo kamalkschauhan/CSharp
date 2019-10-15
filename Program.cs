@@ -430,11 +430,11 @@ namespace CSharp
             Console.WriteLine("Derived constructor");
             Console.WriteLine("");
             Console.WriteLine("");
-            Console.WriteLine("/// Start : static fields test");
+            Console.WriteLine("/// Start : undefined static fields test");
             Console.WriteLine("static int i : " + i);
             Console.WriteLine("static DateTime dt : " + dt);
             Console.WriteLine("static string str : " + str);
-            Console.WriteLine("/// End   : static fields test");
+            Console.WriteLine("/// End   : undefined static fields test");
             Console.WriteLine("");
             Console.WriteLine("");
         }
