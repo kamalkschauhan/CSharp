@@ -1919,26 +1919,6 @@ delete from t2 where Ranking not in (select Min(Ranking) from t2 group by EmpID)
 
 select * from t2
 
---Table - person
-
---sno       Name      Add1          DOJ
-------        -----      ----            ----
---1            A1        Rohini        23-08-2010
---2         A2        Azadpur       01-05-2010        
---3         A3        Pitam Pura    20-06-2010                        
---4         A3        Pitam Pura    20-06-2010                        
---5         A5        Punjabi Bagh  01-10-2010                        
---6         A6        Mahipalpur    08-03-2010                        
---7         A7        Jwalahedi     01-01-2010                        
---8         A8        Badli         15-12-2010                
---9         A9        Bawana        06-11-2010                
---10        A2        Azadpur       01-05-2010                        
-
---Delete Duplicate Rows single query
-----------------------------------
---condition-if there is any unique row with unique values
-delete from person where sno not in (select Min(sno) from person group by Name, Add1, DOJ)
-
 declare @i int
 begin try
     set @i = 1
@@ -2355,6 +2335,29 @@ WITH cte AS (
    FROM dbo.Emp    
 )    
 DELETE cte WHERE [rn] > 1  
+
+
+
+
+--Table - person
+
+--sno       Name      Add1          DOJ
+------        -----      ----            ----
+--1            A1        Rohini        23-08-2010
+--2         A2        Azadpur       01-05-2010        
+--3         A3        Pitam Pura    20-06-2010                        
+--4         A3        Pitam Pura    20-06-2010                        
+--5         A5        Punjabi Bagh  01-10-2010                        
+--6         A6        Mahipalpur    08-03-2010                        
+--7         A7        Jwalahedi     01-01-2010                        
+--8         A8        Badli         15-12-2010                
+--9         A9        Bawana        06-11-2010                
+--10        A2        Azadpur       01-05-2010                        
+
+--Delete Duplicate Rows single query
+----------------------------------
+--condition-if there is any unique row with unique values
+delete from person where sno not in (select Min(sno) from person group by Name, Add1, DOJ)
 
 ---------------------------------------------
 --   END   :   DELETE DUPLICATE ROWS
