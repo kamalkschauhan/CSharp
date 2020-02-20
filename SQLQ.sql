@@ -1,5 +1,5 @@
 select * from galileopcc where pcc like '30G4'
- declare @Counter int
+declare @Counter int
 set @Counter = 0
 UPDATE AATTagList SET @Counter = PKID = @Counter + 1
 
