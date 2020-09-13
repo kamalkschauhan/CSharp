@@ -11,6 +11,11 @@ FROM DataMig..aatdisplay where tcty in ('bru','cai','yyz','ams') order by pkid d
 
 SELECT * FROM Segments where [TransactionRef] = 788845862
 
+-- delete line breaks and tabs from a column
+UPDATE [tbl_error_logging] 
+SET 
+    error_findings = LTRIM(rtrim(replace(replace(replace(error_findings, char(9), ' '), char(10), ' '), char(13), ' ')))
+
 --data generator website
 http://www.generatedata.com/#generator
 
